@@ -1,8 +1,6 @@
 package design.Refilact;
 
-import design.Refilact.UserT;
-
-import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 /**
  * @Auther: jxy
@@ -11,11 +9,20 @@ import java.lang.reflect.Constructor;
  */
 public class MainTest {
     public static void main(String[] args) throws Exception{
-        Class<?> aClass=Class.forName("main.java.design.Refilact.UserT");
-        UserT userT=(UserT)aClass.newInstance();
-        userT.setUserName("sdsdsd");
-        Constructor constructor=aClass.getConstructor();
-        userT =(UserT) constructor.newInstance();
-        userT.setUserName("sssd");
+        Class tclass=TestAnotationClass.class;
+        Method[] methods=tclass.getDeclaredMethods();
+        for (Method m:methods){
+            if(m.getAnnotation(MyAnnotion.class)!=null){
+                System.out.println(m.getAnnotation(MyAnnotion.class).name());
+            }
+            System.out.println(m.getAnnotation(MyAnnotion.class)!=null);
+            m.invoke(tclass.newInstance());
+        }
+//     /*   Class<?> aClass=Class.forName("main.java.design.Refilact.UserT");
+//        UserT userT=(UserT)aClass.newInstance();
+//        userT.setUserName("sdsdsd");
+//        Constructor constructor=aClass.getConstructor();
+//        userT =(UserT) constructor.newInstance();
+//        userT.setUserName("sssd");*/
     }
 }
