@@ -1,13 +1,14 @@
 package myspring.ioc.annotion;
-
-import com.google.protobuf.MapEntry;
+import myspring.ioc.util.AnnotationUtil;
 import myspring.ioc.xmlUtil.ClassUtil;
-
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-//注解版本
+/**
+ * @Auther: jxy
+ * @Date: 2019/3/19 9:12
+ * @Description:注解方式实现IOC
+ */
 public class AnnotionPathContext {
     private String packName;
     ConcurrentHashMap<String, Object> beans = new ConcurrentHashMap<>();
@@ -47,34 +48,26 @@ public class AnnotionPathContext {
         Field[] fields = o.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
-            if (field.getAnnotation(MyAutowired.class) != null) {
+            if (AnnotationUtil.testFieldHasAnnotion(field, MyAutowired.class)) {
                 String id = toLowerCaseFirstOne(field.getType().getSimpleName());
                 field.set(o, getBean(id));
             }
         }
     }
 
-    //实例化所有带注解的类
+    //实例化所有带MyService注解的类
     public void getObjects() throws InstantiationException, IllegalAccessException {
-        //得到所有含Myannotion注解的Class
         List<Class<?>> classes = ClassUtil.getClasses(packName);
         for (Class classNow : classes) {
-            if (testHasAnnotion(classNow)) {
+            if (AnnotationUtil.testClassHasAnnotion(classNow, MyService.class)) {
                 beans.put(toLowerCaseFirstOne(classNow.getSimpleName()), newInstance(classNow));
             }
         }
     }
 
+    //实例化
     public Object newInstance(Class c) throws InstantiationException, IllegalAccessException {
         return c.newInstance();
-    }
-
-    //判断class是否含自定义Service注解
-    public boolean testHasAnnotion(Class classNow) {
-        if (classNow.getAnnotation(MyService.class) != null) {
-            return true;
-        }
-        return false;
     }
 
     // 首字母转小写
