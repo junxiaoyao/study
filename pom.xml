@@ -101,7 +101,12 @@
             <artifactId>spring-orm</artifactId>
             <version>${springVersion}</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/cglib/cglib -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.2.10</version>
+        </dependency>
         <!--J2EE-->
         <dependency>
             <groupId>javax.servlet</groupId>
