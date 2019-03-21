@@ -29,15 +29,15 @@ public class ConnectionPool {
 
     private void initMain() {
         System.out.println(" initMain ");
-      //  freeInit();
+        freeInit();
     }
 
-   /* private void freeInit() {
+    private void freeInit() {
         for (int i = 0; i < connectonUtil.getInitialSize(); i++) {
             Connection connection = this.createConnection();
             freeConnections.offer(connection);
         }
-    }*/
+    }
 
     //创建连接
     private Connection createConnection() {
@@ -83,7 +83,6 @@ public class ConnectionPool {
                     connection = createConnection();
                 }
                 if (isAlife(connection)) {
-                    connection = getConnection();
                     activeConnections.offer(connection);
                     countConnections.incrementAndGet();
                 } else {

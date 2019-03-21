@@ -8,8 +8,8 @@ import java.sql.Connection;
  * @Description:
  */
 public class DataConnectionManage {
-   static ConnectonUtil util= new ConnectonUtil();
-    private  static ConnectionPool pool = new ConnectionPool(util);
+    private static ConnectonUtil util = new ConnectonUtil();
+    private static ConnectionPool pool = new ConnectionPool(util);
 
     public static void releaseConnection(Connection connection) {
         pool.releaseConnection(connection);
@@ -17,5 +17,8 @@ public class DataConnectionManage {
 
     public static Connection getConnection() {
         return pool.getConnection();
+    }
+    public static void say() {
+        System.out.println("i am ssds ");
     }
 }

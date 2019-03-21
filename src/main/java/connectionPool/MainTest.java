@@ -10,12 +10,12 @@ import java.sql.Connection;
 public class MainTest {
 
     public static void main(String[] args) {
-        DataConnectionManage.getConnection();
-      /*  R1 threadConnection = new R1();
+
+        R1 threadConnection = new R1();
         for (int i = 0; i < 3; i++) {
             Thread thread = new Thread(threadConnection, "线程i:" + i);
             thread.start();
-        }*/
+        }
     }
 }
 
