@@ -1,7 +1,4 @@
 package java8.lambda;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 /**
  * @Auther: jxy
  * @Date: 2019/3/18 16:34

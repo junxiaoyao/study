@@ -16,7 +16,6 @@ public class CglibVersion2<E> implements MethodInterceptor {
 
     public CglibVersion2(E e) {
         this.e = e;
-
     }
 
     public E getIntance() {
