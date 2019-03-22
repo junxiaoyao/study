@@ -2,16 +2,9 @@ package mybatis.util;
 
 import mybatis.annotations.MyParam;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.*;
+import java.sql.*;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +39,6 @@ public class SqlUtil {
         Pattern p = Pattern.compile(REGEX);
         Matcher m = p.matcher(sql);
         sql = m.replaceAll(REPLACE);
-        System.out.println(sql);
         return sql;
     }
 
@@ -71,5 +63,95 @@ public class SqlUtil {
         int rows = pstmt.executeUpdate();
         pstmt.close();
         return rows;
+    }
+
+    //执行查询操作
+    public static ResultSet getObjectUtil(Connection connection, String sql, Map<Object, Integer> parms) throws SQLException {
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        for (Map.Entry<Object, Integer> entry : parms.entrySet()) {
+            pstmt.setObject(entry.getValue(), entry.getKey());
+        }
+        ResultSet rs = pstmt.executeQuery();
+        return rs;
+    }
+
+    //获取结果集长度
+    public static int getResultLength(ResultSet rs) throws SQLException {
+        int count = 0;
+        while (rs.next()) {
+            count++;
+        }
+        return count;
+    }
+
+    //装载查询数据
+    public static Object loadData(ResultSet rs, Method method) throws Exception {
+        Class returnType = method.getReturnType();
+        if (returnType == List.class || returnType == ArrayList.class) {
+            return resultToList(rs, method);
+        } else {
+            return resultToObject(rs, returnType);
+        }
+    }
+
+    //给属性赋值
+    public static void fieldsSetValue(Object o, ResultSet rs) throws Exception {
+        Field[] fields = o.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            Object value = rs.getObject(field.getName());
+            field.setAccessible(true);
+            field.set(o, value);
+        }
+    }
+
+    //将结果装载为对象
+    public static Object resultToObject(ResultSet rs, Class returnType) throws Exception {
+        int count = 0;
+        Object o = null;
+        while (rs.next()) {
+            if (count < 1) {
+                o = returnType.newInstance();
+                fieldsSetValue(o, rs);
+            }
+            count++;
+        }
+        if (count > 1) {
+            throw new SQLException("Expected 1 found "+count);
+        }
+        return o;
+    }
+
+    //将结果装载为List
+    public static List resultToList(ResultSet rs, Method method) throws Exception {
+        List list = new ArrayList();
+        while (rs.next()) {
+            Object o = getTypeClass(method.getGenericReturnType());
+            fieldsSetValue(o, rs);
+            list.add(o);
+        }
+        return list;
+    }
+
+    //返回泛型实例化对象
+    public static Object getTypeClass(Type returnType) throws Exception {
+        if (returnType instanceof ParameterizedType) {
+            Type[] typeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
+            if (typeArguments.length > 0) {
+                return Class.forName(typeArguments[0].getTypeName()).newInstance();
+            }
+        }
+        return null;
+    }
+
+    //打印SQL
+    public static void printOutSqlAndParams(String sql, Map<Object, Integer> parms) {
+        System.out.println("########################################################################################");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("SQL:" + sql);
+        for (Map.Entry<Object, Integer> entry : parms.entrySet()) {
+            stringBuilder.append(" position:" + entry.getValue()).append(" value: " + entry.getKey());
+        }
+        System.out.println(stringBuilder.toString());
+        System.out.println("########################################################################################");
     }
 }
