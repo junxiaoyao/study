@@ -16,5 +16,5 @@ import mybatis.annotations.MyParam;
 
 public interface NameDao {
     @MyInsertInto("insert into names(name,sex) values(#{name},#{sex})")
-    int insert(@MyParam("name") String name, @MyParam("sex") String sex);
+    int insert( @MyParam("sex") String sex,@MyParam("name") String name);
 }

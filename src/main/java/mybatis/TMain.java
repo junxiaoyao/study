@@ -1,4 +1,5 @@
 package mybatis;
+
 import mybatis.daos.*;
 import mybatis.proxy.SqlSessionManage;
 
@@ -9,7 +10,7 @@ import mybatis.proxy.SqlSessionManage;
  */
 public class TMain {
     public static void main(String[] args) {
-        NameDao dao= SqlSessionManage.getDao(NameDao.class);
-        dao.insert("s","s");
+        NameDao dao = SqlSessionManage.getDao(NameDao.class);
+        dao.insert("nameTest","sexTest");
     }
 }
