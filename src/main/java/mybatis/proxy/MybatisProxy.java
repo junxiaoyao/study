@@ -1,5 +1,6 @@
 package mybatis.proxy;
 
+import connectionPool.DataConnectionManage;
 import mybatis.annotations.MyInsertInto;
 import mybatis.annotations.MyParam;
 import mybatis.util.SqlUtil;
@@ -35,7 +36,7 @@ public class MybatisProxy implements InvocationHandler {
         return 1;
     }
 
-    private Object insert(Object proxy, Method method, Object[] args) {
+    private Object insert(Object proxy, Method method, Object[] args) throws Exception {
         MyInsertInto myInsertInto = AnnotationUtil.getMethodAnnotion(method, MyInsertInto.class);
         Map<String, Integer> mapSql = new HashMap<>();
         String sql = myInsertInto.value();
@@ -43,18 +44,9 @@ public class MybatisProxy implements InvocationHandler {
         Parameter[] parameters = method.getParameters();
         System.out.println(parameters[0].getAnnotation(MyParam.class).value());
         System.out.println(args[0].toString());
-        Map<Object, Integer> parms=paramzz(method,args,mapSql);
-        return 1;
+        Map<Object, Integer> parms = SqlUtil.paramzz(method, args, mapSql);
+        return SqlUtil.insertIntoUtil(DataConnectionManage.getConnection(), sql, parms);
     }
 
-    public Map<Object, Integer> paramzz(Method method, Object[] args, Map<String, Integer> map) {
-        Map<Object, Integer> parms = new HashMap<>();
-        Parameter[] parameters = method.getParameters();
-        for (int i = 0; i < map.size(); i++) {
-            String key = parameters[i].getAnnotation(MyParam.class).value();
-            int value = map.get(key);
-            parms.put(args[i], value);
-        }
-        return parms;
-    }
+
 }

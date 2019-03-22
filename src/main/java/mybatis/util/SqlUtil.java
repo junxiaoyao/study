@@ -1,11 +1,16 @@
 package mybatis.util;
 
+import mybatis.annotations.MyParam;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,14 +50,26 @@ public class SqlUtil {
         return sql;
     }
 
+    //参数序号工具
+    public static Map<Object, Integer> paramzz(Method method, Object[] args, Map<String, Integer> map) {
+        Map<Object, Integer> parms = new HashMap<>();
+        Parameter[] parameters = method.getParameters();
+        for (int i = 0; i < map.size(); i++) {
+            String key = parameters[i].getAnnotation(MyParam.class).value();
+            int value = map.get(key);
+            parms.put(args[i], value);
+        }
+        return parms;
+    }
+
     //执行新增操作
-    public static int insertIntoUtil(Connection connection, String sql, ArrayList args) throws SQLException {
-        PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(sql);
-        pstmt.setString(1, connection.toString());
-        java.util.Date date = Calendar.getInstance().getTime();
-        pstmt.setDate(2, new Date(date.getYear(), date.getMonth(), date.getDay()));
-        pstmt.executeUpdate();
+    public static int insertIntoUtil(Connection connection, String sql, Map<Object, Integer> parms) throws SQLException {
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        for (Map.Entry<Object, Integer> entry : parms.entrySet()) {
+            pstmt.setObject(entry.getValue(), entry.getKey());
+        }
+        int rows = pstmt.executeUpdate();
         pstmt.close();
-        return 1;
+        return rows;
     }
 }
