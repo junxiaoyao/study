@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class SqlUtil {
 
-    //返回sql
+    //返回sql，并将参数位置装到map
     public static String getParameter(String sql, Map<String, Integer> map) {
         int count = 1;
         String sqlC = sql;
@@ -55,7 +55,7 @@ public class SqlUtil {
     }
 
     //执行新增操作
-    public static int insertIntoUtil(Connection connection, String sql, Map<Object, Integer> parms) throws SQLException {
+    public static int insertAndUpateUtil(Connection connection, String sql, Map<Object, Integer> parms) throws SQLException {
         PreparedStatement pstmt = connection.prepareStatement(sql);
         for (Map.Entry<Object, Integer> entry : parms.entrySet()) {
             pstmt.setObject(entry.getValue(), entry.getKey());
@@ -75,6 +75,17 @@ public class SqlUtil {
         return rs;
     }
 
+    //执行删除操作
+    public static void deleteObjectUtil(Connection connection, String sql, Map<Object, Integer> parms) throws SQLException {
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        for (Map.Entry<Object, Integer> entry : parms.entrySet()) {
+            pstmt.setObject(entry.getValue(), entry.getKey());
+        }
+        pstmt.execute();
+        //ResultSet rs = pstmt.executeQuery();
+
+    }
+
     //获取结果集长度
     public static int getResultLength(ResultSet rs) throws SQLException {
         int count = 0;
@@ -87,6 +98,7 @@ public class SqlUtil {
     //装载查询数据
     public static Object loadData(ResultSet rs, Method method) throws Exception {
         Class returnType = method.getReturnType();
+        //返回类型为list
         if (returnType == List.class || returnType == ArrayList.class) {
             return resultToList(rs, method);
         } else {
@@ -116,18 +128,23 @@ public class SqlUtil {
             count++;
         }
         if (count > 1) {
-            throw new SQLException("Expected 1 found "+count);
+            throw new SQLException("Expected 1 found " + count);
         }
         return o;
     }
 
     //将结果装载为List
     public static List resultToList(ResultSet rs, Method method) throws Exception {
-        List list = new ArrayList();
+        List list = null;
+        int count = 0;
         while (rs.next()) {
+            if (count < 1) {
+                list = new ArrayList();
+            }
             Object o = getTypeClass(method.getGenericReturnType());
             fieldsSetValue(o, rs);
             list.add(o);
+            count++;
         }
         return list;
     }

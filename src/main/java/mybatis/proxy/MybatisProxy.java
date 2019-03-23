@@ -1,9 +1,7 @@
 package mybatis.proxy;
 
 import connectionPool.DataConnectionManage;
-import mybatis.annotations.MyInsertInto;
-import mybatis.annotations.MyParam;
-import mybatis.annotations.MySelect;
+import mybatis.annotations.*;
 import mybatis.util.SqlUtil;
 import myspring.ioc.util.AnnotationUtil;
 
@@ -32,37 +30,80 @@ public class MybatisProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (AnnotationUtil.testMethodHasAnnotion(method, MyInsertInto.class)) {
-            return insert(proxy, method, args);
+            return insert(method, args);
+        }
+        if (AnnotationUtil.testMethodHasAnnotion(method, MyUpdate.class)) {
+            return update(method, args);
         }
         if (AnnotationUtil.testMethodHasAnnotion(method, MySelect.class)) {
-            return select(proxy, method, args);
+            return select(method, args);
+        }
+        if (AnnotationUtil.testMethodHasAnnotion(method, MyDelete.class)) {
+            delete(method, args);
         }
         return null;
     }
 
-    private Object insert(Object proxy, Method method, Object[] args) throws Exception {
+    /**
+     * method.getParameters();获取参数
+     * args 参数值
+     */
+    //新增操作
+    private Object insert(Method method, Object[] args) throws Exception {
         MyInsertInto myInsertInto = AnnotationUtil.getMethodAnnotion(method, MyInsertInto.class);
-        Map<String, Integer> mapSql = new HashMap<>();
-        String sql = myInsertInto.value();
-        sql = SqlUtil.getParameter(sql, mapSql);
+       /* Map<String, Integer> mapSql = new HashMap<>();
+        String sql = sqlModify(myInsertInto.value(), mapSql);
         Connection connection = getConnection();
         SqlUtil.printOutSqlAndParams(sql, SqlUtil.paramzz(method, args, mapSql));
-        Object o = SqlUtil.insertIntoUtil(connection, sql, SqlUtil.paramzz(method, args, mapSql));
+        Object o = SqlUtil.insertAndUpateUtil(connection, sql, SqlUtil.paramzz(method, args, mapSql));
+        releaseConnection(connection)*/
+        return insertAndUpdate(myInsertInto.value(), method, args);
+    }
+
+    //更新操作
+    private Object update(Method method, Object[] args) throws Exception {
+        MyUpdate myUpdate = AnnotationUtil.getMethodAnnotion(method, MyUpdate.class);
+        return insertAndUpdate(myUpdate.value(), method, args);
+    }
+
+    //更新查询操作
+    private Object insertAndUpdate(String sql, Method method, Object[] args) throws Exception {
+        Map<String, Integer> mapSql = new HashMap<>();
+        sql = sqlModify(sql, mapSql);
+        Connection connection = getConnection();
+        SqlUtil.printOutSqlAndParams(sql, SqlUtil.paramzz(method, args, mapSql));
+        Object o = SqlUtil.insertAndUpateUtil(connection, sql, SqlUtil.paramzz(method, args, mapSql));
         releaseConnection(connection);
         return o;
     }
 
-    private Object select(Object proxy, Method method, Object[] args) throws Exception {
+    //查询操作
+    private Object select(Method method, Object[] args) throws Exception {
         MySelect mySelect = AnnotationUtil.getMethodAnnotion(method, MySelect.class);
         Map<String, Integer> mapSql = new HashMap<>();
-        String sql = mySelect.value();
-        sql = SqlUtil.getParameter(sql, mapSql);
+        String sql = sqlModify(mySelect.value(), mapSql);
         Connection connection = getConnection();
         Map<Object, Integer> paramzz = SqlUtil.paramzz(method, args, mapSql);
         SqlUtil.printOutSqlAndParams(sql, paramzz);
         ResultSet rs = SqlUtil.getObjectUtil(connection, sql, paramzz);
         releaseConnection(connection);
         return SqlUtil.loadData(rs, method);
+    }
+
+    //删除操作
+    private void delete(Method method, Object[] args) throws Exception {
+        MyDelete myDelete = AnnotationUtil.getMethodAnnotion(method, MyDelete.class);
+        Map<String, Integer> mapSql = new HashMap<>();
+        String sql = sqlModify(myDelete.value(), mapSql);
+        Connection connection = getConnection();
+        Map<Object, Integer> paramzz = SqlUtil.paramzz(method, args, mapSql);
+        SqlUtil.deleteObjectUtil(connection, sql, paramzz);
+        SqlUtil.printOutSqlAndParams(sql, paramzz);
+    }
+
+    //调用处理sql装载参数顺序
+    private String sqlModify(String sql, Map<String, Integer> mapSql) {
+        return SqlUtil.getParameter(sql, mapSql);
     }
 
     //得到连接
