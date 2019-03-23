@@ -51,12 +51,6 @@ public class MybatisProxy implements InvocationHandler {
     //新增操作
     private Object insert(Method method, Object[] args) throws Exception {
         MyInsertInto myInsertInto = AnnotationUtil.getMethodAnnotion(method, MyInsertInto.class);
-       /* Map<String, Integer> mapSql = new HashMap<>();
-        String sql = sqlModify(myInsertInto.value(), mapSql);
-        Connection connection = getConnection();
-        SqlUtil.printOutSqlAndParams(sql, SqlUtil.paramzz(method, args, mapSql));
-        Object o = SqlUtil.insertAndUpateUtil(connection, sql, SqlUtil.paramzz(method, args, mapSql));
-        releaseConnection(connection)*/
         return insertAndUpdate(myInsertInto.value(), method, args);
     }
 
