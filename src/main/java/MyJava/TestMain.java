@@ -6,14 +6,14 @@ package MyJava;
  */
 public class TestMain {
     public static void main(String[] args) {
-        MyArrayList<Object> myArrayList = new MyArrayList<>(1);
-        myArrayList.add("1");
-        myArrayList.add("3");
-        myArrayList.add("4");
-        myArrayList.add("5");
-        myArrayList.add(4,"2");
-        myArrayList.get(4);
-        boolean s=myArrayList.remove("2");
+        MyArrayList<MyArrayList> myArrayList = new MyArrayList<>(1);
+        myArrayList.add(new MyArrayList<>(1));
+        myArrayList.add(new MyArrayList<>(2));
+        myArrayList.add(new MyArrayList<>(3));
+        myArrayList.add(new MyArrayList<>(4));
+        myArrayList.add(4,new MyArrayList<>(5));
+        MyArrayList m=  myArrayList.get(4);
+        boolean s=myArrayList.remove(m);
         System.out.println(myArrayList.size());
     }
 }

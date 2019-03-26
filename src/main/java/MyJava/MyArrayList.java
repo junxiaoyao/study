@@ -88,6 +88,7 @@ public class MyArrayList<E> implements MyList<E> {
 
     @Override
     public boolean remove(Object o) {
+        if (o == null) return false;
         for (int i = 0; i < size; i++) {
             if (elementData[i].equals(o)) {
                 remove(i);
