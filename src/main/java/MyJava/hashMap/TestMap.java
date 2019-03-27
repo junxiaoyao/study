@@ -13,6 +13,7 @@ public class TestMap {
         myHashMap.put("1","1");
         myHashMap.put("2","2");
       //  myHashMap.put(null,"2222");
+        //null报错
         for(int i=0;i<100;i++){
             String s=i+"";
             myHashMap.put(s,s);
