@@ -4,6 +4,9 @@ import mybatis.daos.*;
 import mybatis.entity.Names;
 import mybatis.proxy.SqlSessionManage;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.List;
 
 /**
@@ -12,7 +15,8 @@ import java.util.List;
  * @Description:
  */
 public class TMain {
-    public static void main(String[] args) {
+    public static void main(String[] args)throws Exception {
+       // new BufferedReader(new FileInputStream(""));
         NameDao dao = SqlSessionManage.getDao(NameDao.class);
         /*  Names name = dao.getById(7l);*/
         List<Names> list = dao.getByName("nameTest");

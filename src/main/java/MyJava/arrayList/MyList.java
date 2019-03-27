@@ -1,4 +1,4 @@
-package MyJava;
+package MyJava.arrayList;
 
 public interface MyList<E> {
     boolean add(E e);

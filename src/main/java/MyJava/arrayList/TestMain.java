@@ -1,4 +1,4 @@
-package MyJava;
+package MyJava.arrayList;
 /**
  * @Auther: jxy
  * @Date: 2019/3/26 9:19
