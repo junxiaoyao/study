@@ -9,15 +9,22 @@ import java.util.HashMap;
  */
 public class TestMap {
     public static void main(String[] args) {
-        MyHashMap<String,String> myHashMap=new MyHashMap<>();
-        myHashMap.put("1","1");
-        myHashMap.put("2","2");
-      //  myHashMap.put(null,"2222");
-        for(int i=0;i<100;i++){
-            String s=i+"";
-            myHashMap.put(s,s);
+        MyHashMap<String, String> myHashMap = new MyHashMap<>();
+        myHashMap.put(null,"null");
+        for (int i = 0; i < 50; i++) {
+            String s = i + "";
+            myHashMap.put(s, s);
         }
-        String s=myHashMap.get(null);
-        System.out.println();
+        for (int i = 0; i < 50; i++) {
+            String s =""+ i ;
+            myHashMap.put(s, "new:"+s);
+        }
+       myHashMap.printMap();
+        System.out.println(myHashMap.get(null));
+        for (int i = 0; i < 50; i++) {
+            String s = i + "";
+            System.out.println("key:"+i+"v:"+myHashMap.get(s));
+        }
+        System.out.println(myHashMap.size());
     }
 }
