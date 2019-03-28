@@ -28,7 +28,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
             throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
         if (initCapacity > MAXIMUM_CAPACITY)
             initCapacity = MAXIMUM_CAPACITY;
-        this.initCapacity = initCapacity;
+        this.initCapacity = roundUpToPowerOf2(initCapacity);
         this.loadFactor = loadFactor;
     }
 
@@ -161,8 +161,60 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     }
 
     @Override
-    public void remove(K key) {
+    public V remove(K key) {
+        MyEntry<K, V> result = removeMyEntry(key);
+        return result != null ? result.value : null;
+    }
 
+    private MyEntry<K, V> removeMyEntry(K key) {
+        int index = 0;
+        if (key != null) {
+            index = lookIndex(hash(key), table.length - 1);
+        }
+        MyEntry<K, V> myEntry = table[index];
+        MyEntry<K, V> result = null;
+        if (myEntry != null) {
+            if (key != null) {
+                if (myEntry.key.equals(key) || myEntry.key == key) {
+                    result = myEntry;
+                    table[index] = myEntry.next;
+                    size--;
+                    return result;
+                }
+                while (myEntry.next != null) {
+                    if (myEntry.next.key.equals(key) || myEntry.next.key == key) {
+                        break;
+                    }
+                    myEntry = myEntry.next;
+                }
+                if (myEntry.next != null) {
+                    result = myEntry;
+                    myEntry = myEntry.next.next;
+                    size--;
+                    return result;
+                }
+            } else {
+                if (myEntry.key == null) {
+                    table[index] = myEntry.next;
+                    size--;
+                    return myEntry;
+                } else {
+                    while (myEntry.next != null) {
+                        if (myEntry.next.key == null) {
+                            break;
+                        }
+                        myEntry = myEntry.next;
+                    }
+                    if (myEntry.next != null) {
+                        result = myEntry;
+                        myEntry = myEntry.next.next;
+                        size--;
+                        return result;
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public void printMap() {
@@ -192,6 +244,12 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static int roundUpToPowerOf2(int number) {
+        // assert number >= 0 : "number must be non-negative";
+        return number >= MAXIMUM_CAPACITY ? MAXIMUM_CAPACITY
+                : (number > 1) ? Integer.highestOneBit((number - 1) << 1) : 1;
     }
 }
 
