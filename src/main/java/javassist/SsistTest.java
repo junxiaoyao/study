@@ -12,11 +12,7 @@ public class SsistTest {
 
         try {
             addMethodTest();
-//            Class c = User.class;
-//            Object o = c.newInstance();
-//            Method m = c.getDeclaredMethod("sum", int.class, int.class);
-//            int result=(int)m.invoke(o,5,10);
-//            System.out.println(result);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -26,10 +22,14 @@ public class SsistTest {
         ClassPool pool = ClassPool.getDefault();
         CtClass ctClass = pool.get("javassist.User");
         CtMethod ctMethod = new CtMethod(CtClass.intType, "sum", new CtClass[]{CtClass.intType, CtClass.intType}, ctClass);
-        ctMethod.setBody("{ return $1+$2;");
+        ctMethod.setBody("{ return ($1+$2);}");
         ctClass.addMethod(ctMethod);
-
         ctClass.writeFile("F:/test");
+        Class c = ctClass.toClass();
+        Object o = c.newInstance();
+        Method m = c.getDeclaredMethod("sum", int.class, int.class);
+        int result = (int) m.invoke(o, 5, 10);
+        System.out.println(result);
     }
 
     /*public static void main(String[] args) throws Exception {
