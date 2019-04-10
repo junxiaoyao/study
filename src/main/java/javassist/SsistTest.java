@@ -26,20 +26,13 @@ public class SsistTest {
         ClassPool pool = ClassPool.getDefault();
         CtClass ctClass = pool.get("javassist.User");
         CtMethod ctMethod = new CtMethod(CtClass.intType, "sum", new CtClass[]{CtClass.intType, CtClass.intType}, ctClass);
-        ctMethod.setBody("{ return $1+$2;");
+        ctMethod.setBody("{ return $1+$2;}");
         ctClass.addMethod(ctMethod);
-
+        Object o=ctClass.toClass().newInstance();
+        Method m=o.getClass().getDeclaredMethod("sum",int.class,int.class);
+        System.out.println(m.invoke(o,5,10));
         ctClass.writeFile("F:/test");
     }
-
-    /*public static void main(String[] args) throws Exception {
-
-        ClassPool pool = ClassPool.getDefault();
-        CtClass ctClass = pool.get("javassist.User");
-        CtMethod mthd = CtNewMethod.make("public Integer getInteger() { return null; }", ctClass);
-        ctClass.addMethod(mthd);
-        ctClass.writeFile("F:/test");
-    }*/
     public void sample() {
         try {
             ClassPool pool = ClassPool.getDefault();
