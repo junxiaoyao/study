@@ -32,7 +32,10 @@ public class AnnotationUtil {
         }
         return false;
     }
-
+    //得到Class的指定注解
+    public static <T> T getClassAnnotion(Class c, Class anotion) {
+        return (T) c.getAnnotation(anotion);
+    }
     //得到Method的指定注解
     public static <T> T getMethodAnnotion(Method method, Class anotion) {
         return (T) method.getAnnotation(anotion);
