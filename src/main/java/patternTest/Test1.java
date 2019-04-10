@@ -1,6 +1,7 @@
 package patternTest;
 
 import java.lang.reflect.Parameter;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -14,7 +15,10 @@ public class Test1 {
         String content = "insert into names(name,sex) values(#{name},#{sex})";
         String content2 = "15525252";
 
+        String qrx = "E401010301";
+        String pa="E4.*";
 
+        boolean qrxBool = Pattern.matches(pa, qrx);
       /*  int firstC = content.indexOf("#{");
         int lastC = content.indexOf("}");
         while (firstC > 0 && lastC > 0) {

@@ -12,7 +12,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     static final int MAXIMUM_CAPACITY = 1 << 30;
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
     private int size;
-    transient int hashSeed = 0;
+    transient int hashSeed = 6;
     MyEntry<K, V>[] table;
     private float loadFactor;
     private int initCapacity;
@@ -28,7 +28,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
             throw new IllegalArgumentException("Illegal load factor: " + loadFactor);
         if (initCapacity > MAXIMUM_CAPACITY)
             initCapacity = MAXIMUM_CAPACITY;
-        this.initCapacity = initCapacity;
+        this.initCapacity = roundUpToPowerOf2(initCapacity);
         this.loadFactor = loadFactor;
     }
 
@@ -36,9 +36,9 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     public V get(K key) {
         MyEntry<K, V> myEntry;
         if (key == null) {
-            myEntry = table[0];
+            myEntry = ergodicMyEntry(table[0], key);
         } else {
-            int index = lookIndex(key.hashCode(), table.length - 1);
+            int index = lookIndex(hash(key), table.length - 1);
             myEntry = ergodicMyEntry(table[index], key);
         }
         if (myEntry != null)
@@ -50,10 +50,12 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     public V put(K key, V value) {
         if (table == null)
             table = new MyEntry[initCapacity];
+        //是否扩容
+        expansionCapacity();
         if (key == null)
             return putForNull(key, value);
-        int index = lookIndex(key.hashCode(), table.length - 1);
-        System.out.println("key:"+key+" hashcode:"+key.hashCode()+ " index:"+index);
+        int index = lookIndex(hash(key), table.length - 1);
+        //    System.out.println("key:" + key + " hash:" + hash(key) + " index:" + index);
         if (table[index] != null) {
             MyEntry<K, V> myEntry = ergodicMyEntry(table[index], key);
             if (myEntry != null) {
@@ -70,13 +72,12 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
             table[index] = addMyEntry(key, value);
             size++;
         }
-
         return null;
     }
 
     //得到下标
-    private int lookIndex(int hashcode, int length) {
-        return hashcode & length;
+    private int lookIndex(int hash, int length) {
+        return hash & length;
     }
 
     private V putForNull(K key, V value) {
@@ -106,29 +107,133 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     //遍历节点
     private MyEntry<K, V> ergodicMyEntry(MyEntry<K, V> myEntry, K key) {
         while (myEntry != null) {
-            if (myEntry.key.equals(key) || myEntry.key == key) {
-                return myEntry;
+            if (myEntry.key != null) {
+                if (myEntry.key.equals(key) || myEntry.key == key) {
+                    return myEntry;
+                }
+            } else {
+                if (key == null)
+                    return myEntry;
             }
             myEntry = myEntry.next;
         }
         return null;
     }
 
-    /* //这是一个神奇的函数，用了很多的异或，移位等运算，对key的hashcode进一步进行计算以及二进制位的调整等来保证最终获取的存储位置尽量分布均匀
-     final int hash(Object k) {
-         int h = hashSeed;
-         if (0 != h && k instanceof String) {
-             return sun.misc.Hashing.stringHash32((String) k);
-         }
+    //这是一个神奇的函数，用了很多的异或，移位等运算，
+    // 对key的hashcode进一步进行计算以及二进制位的
+    // 调整等来保证最终获取的存储位置尽量分布均匀
+    final int hash(Object k) {
+        int h = hashSeed;
+        h ^= k.hashCode();
+        h ^= (h >>> 20) ^ (h >>> 12);
+        return h ^ (h >>> 7) ^ (h >>> 4);
+    }
 
-         h ^= k.hashCode();
+    private void expansionCapacity() {
+        int c = (int) (table.length * loadFactor);
+        if ((size + 1) > c && (table.length * 2) < MAXIMUM_CAPACITY) {
+            MyEntry<K, V>[] newTable = new MyEntry[table.length * 2];
+            for (MyEntry<K, V> entry : table) {
+                if (entry != null) {
+                    expansionCapacity(entry, newTable);
+                }
+            }
+            table = newTable;
+        }
+    }
 
-         h ^= (h >>> 20) ^ (h >>> 12);
-         return h ^ (h >>> 7) ^ (h >>> 4);
-     }*/
+    private void expansionCapacity(MyEntry<K, V> entry, MyEntry<K, V>[] newTable) {
+        while (entry != null) {
+            int index = 0;
+            if (entry.key != null) {
+                index = lookIndex(hash(entry.key), newTable.length - 1);
+            }
+            if (newTable[index] != null) {
+                MyEntry<K, V> add = addMyEntry(entry.key, entry.value);
+                add.next = newTable[index];
+                newTable[index] = add;
+            } else {
+                newTable[index] = addMyEntry(entry.key, entry.value);
+            }
+            entry = entry.next;
+        }
+    }
+
     @Override
-    public void remove(K key) {
+    public V remove(K key) {
+        MyEntry<K, V> result = removeMyEntry(key);
+        return result != null ? result.value : null;
+    }
 
+    private MyEntry<K, V> removeMyEntry(K key) {
+        int index = 0;
+        if (key != null) {
+            index = lookIndex(hash(key), table.length - 1);
+        }
+        MyEntry<K, V> myEntry = table[index];
+        MyEntry<K, V> result = null;
+        if (myEntry != null) {
+            if (key != null) {
+                if (myEntry.key.equals(key) || myEntry.key == key) {
+                    result = myEntry;
+                    table[index] = myEntry.next;
+                    size--;
+                    return result;
+                }
+                while (myEntry.next != null) {
+                    if (myEntry.next.key.equals(key) || myEntry.next.key == key) {
+                        break;
+                    }
+                    myEntry = myEntry.next;
+                }
+                if (myEntry.next != null) {
+                    result = myEntry;
+                    myEntry = myEntry.next.next;
+                    size--;
+                    return result;
+                }
+            } else {
+                if (myEntry.key == null) {
+                    table[index] = myEntry.next;
+                    size--;
+                    return myEntry;
+                } else {
+                    while (myEntry.next != null) {
+                        if (myEntry.next.key == null) {
+                            break;
+                        }
+                        myEntry = myEntry.next;
+                    }
+                    if (myEntry.next != null) {
+                        result = myEntry;
+                        myEntry = myEntry.next.next;
+                        size--;
+                        return result;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public void printMap() {
+        for (int i = 0; i < table.length; i++) {
+            System.out.print("I:" + i);
+            printMyEntry(table[i]);
+        }
+    }
+
+    public void printMyEntry(MyEntry<K, V> myEntry) {
+        while (myEntry != null) {
+            if (myEntry.key != null)
+                System.out.print("-->> hash:" + hash(myEntry.key) + " K:" + myEntry.key + " V: " + myEntry.value);
+            else
+                System.out.print("-->> hash:" + null + " K:" + null + " V: " + myEntry.value);
+
+            myEntry = myEntry.next;
+        }
+        System.out.println();
     }
 
     @Override
@@ -139,6 +244,12 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private static int roundUpToPowerOf2(int number) {
+        // assert number >= 0 : "number must be non-negative";
+        return number >= MAXIMUM_CAPACITY ? MAXIMUM_CAPACITY
+                : (number > 1) ? Integer.highestOneBit((number - 1) << 1) : 1;
     }
 }
 
@@ -159,4 +270,5 @@ class MyEntry<K, V> {
         this.next = next;
         this.hash = hash;
     }
+
 }
