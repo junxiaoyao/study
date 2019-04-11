@@ -40,7 +40,7 @@ public class SsistTest {
             CtClass userClass = pool.get("javassist.User");
             CtMethod method = new CtMethod(CtClass.voidType, "sum", new CtClass[]{CtClass.intType, CtClass.intType},
                     userClass);
-            method.setBody("{System.out.println(\"sun:\" + ($1 + $2));}");
+            method.setBody("{System.out.println(\"sum:\" + ($1 + $2));}");
             // 添加方法
             userClass.addMethod(method);
             //  userClass.writeFile("F:/test");
