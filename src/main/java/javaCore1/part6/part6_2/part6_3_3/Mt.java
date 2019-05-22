@@ -3,7 +3,12 @@ package javaCore1.part6.part6_2.part6_3_3;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 import javax.swing.Timer;
+import jvm.testInit.fieldInit.S;
 
 public class Mt {
 
@@ -18,6 +23,7 @@ public class Mt {
     list.removeIf(e -> e == null);
     System.out.println(list.size());
     System.out.println();
+
 //    Object o=Math::pow();
     //show("s",5);
     new Thread(new Runnable() {
