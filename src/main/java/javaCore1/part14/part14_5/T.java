@@ -1,9 +1,13 @@
 package javaCore1.part14.part14_5;
+
 public class T {
+
   public static void main(String[] args) {
 //    Lock lock=new ReentrantLock();
 //    Condition condition=lock.newCondition();
 //    condition.signalAll();
+    TestInter inter=(e)->System.out.println(e);
+    inter.show("sad");
     T2 o1 = new T2();
     o1.setName("o1");
     o1.setSize(20);
@@ -25,8 +29,8 @@ class RunAbleSetSize implements Runnable {
   @Override
   public void run() {
     while (true) {
-      int size=(int) (Math.random() * 100);
-     // System.out.println("设置值："+size);
+      int size = (int) (Math.random() * 100);
+      // System.out.println("设置值："+size);
       t2.setSize(size);
     }
   }
@@ -50,6 +54,7 @@ class T2 {
 
   private int size;
   private String name;
+
   public int getSize() {
     return size;
   }
@@ -70,7 +75,7 @@ class T2 {
   public synchronized void show() {
     try {
       while (size < 50) {
-       // System.out.println("我将阻塞了：" + name);
+        // System.out.println("我将阻塞了：" + name);
         wait();
       }
       System.out.println("我输出：" + size);
@@ -80,4 +85,8 @@ class T2 {
       notifyAll();
     }
   }
+}
+
+interface TestInter {
+  void show(String name);
 }
