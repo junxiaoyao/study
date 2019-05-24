@@ -44,19 +44,14 @@ class TestVolatileRunable implements Runnable {
 
   @Override
   public void run() {
-    try {
       for (int i = 0; i < 1000; i++) {
           testCount.countAdd();
       }
       countDownLatch.down();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
   }
 }
  class Test {
   public volatile int inc = 0;
-
   public void increase() {
     inc++;
   }

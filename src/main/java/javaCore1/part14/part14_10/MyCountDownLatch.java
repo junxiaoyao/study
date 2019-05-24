@@ -14,7 +14,7 @@ public class MyCountDownLatch {
     }
   }
 
-  public synchronized void down() throws InterruptedException {
+  public synchronized void down() {
     count--;
     notifyAll();
   }
