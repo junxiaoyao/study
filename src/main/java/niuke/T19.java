@@ -26,9 +26,9 @@ public class T19 {
       return;
     }
     TreeNode temp = mis(root);
-    root = temp;
+    root.left=temp.left;
+    root.right=temp.right;
   }
-
   public TreeNode mis(TreeNode root) {
     TreeNode treeNode = null;
     if (root != null) {
