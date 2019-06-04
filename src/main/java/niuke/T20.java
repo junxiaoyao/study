@@ -24,20 +24,22 @@ public class T20 {
         {9, 10, 11, 12},
         {13, 14, 15, 16}
     };
+    int[][] nums2 = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
+    int[][] nums3 = {{1}, {2}, {3}};
     T20 t20 = new T20();
-    int[][] ss = t20.cfArray(nums);
-    ArrayList<Integer> printMatrix=t20.printMatrix(nums);
+    int[][] ss = t20.cfArray(nums2);
+    ArrayList<Integer> printMatrix = t20.printMatrix(nums3);
     System.out.println();
   }
 
   public ArrayList<Integer> printMatrix(int[][] matrix) {
     ArrayList<Integer> list = new ArrayList<>();
-      printArray(matrix, list);
-      int[][]a=cfArray(matrix);
-      while (a!=null){
-        printArray(a, list);
-        a=cfArray(a);
-      }
+    printArray(matrix, list);
+    int[][] a = cfArray(matrix);
+    while (a != null) {
+      printArray(a, list);
+      a = cfArray(a);
+    }
     return list;
   }
 
@@ -48,6 +50,8 @@ public class T20 {
       // System.out.println(matrix[x][y]);
       list.add(matrix[x][y]);
     }
+    if (matrix.length<2)
+      return;
     y--;
     for (x++; x < matrix.length; x++) {
       // System.out.println(matrix[x][y]);
@@ -59,9 +63,11 @@ public class T20 {
       list.add(matrix[x][y]);
     }
     y++;
-    for (x--; x > 0; x--) {
-      // System.out.println(matrix[x][y]);
-      list.add(matrix[x][y]);
+    if (matrix[0].length > 1) {
+      for (x--; x > 0; x--) {
+        // System.out.println(matrix[x][y]);
+        list.add(matrix[x][y]);
+      }
     }
   }
 
@@ -69,6 +75,7 @@ public class T20 {
     if (rootArray.length < 3 || rootArray[0].length < 3) {
       return null;
     }
+    int xLength = 1;
     int[][] array = new int[rootArray.length - 2][rootArray[0].length - 2];
     for (int i = 0; i < array.length; i++) {
       for (int j = 0; j < array[i].length; j++) {
