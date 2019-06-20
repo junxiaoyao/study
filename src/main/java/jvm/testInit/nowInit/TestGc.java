@@ -8,7 +8,7 @@ public class TestGc {
     // {
     byte[] bytes = new byte[64 * 1024 * 1024];
     // }
-    bytes = null;
+    //bytes = null;
 //    Byte s =null;
     //int i=0;
     System.gc();
