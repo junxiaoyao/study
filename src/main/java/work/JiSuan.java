@@ -6,8 +6,9 @@ package work;
  * @create: 2019-06-13 10:52
  */
 public class JiSuan {
-
+static int s;
   public static void main(String[] args) {
+    System.out.println(s);
     int jishu=500;
     int fs=110;
     System.out.println("jl:"+jl(jishu,fs));
