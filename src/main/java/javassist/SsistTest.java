@@ -26,7 +26,7 @@ public class SsistTest {
         ClassPool pool = ClassPool.getDefault();
         CtClass ctClass = pool.get("javassist.User");
         CtMethod ctMethod = new CtMethod(CtClass.intType, "sum", new CtClass[]{CtClass.intType, CtClass.intType}, ctClass);
-        ctMethod.setBody("{ return $1+$2;}");
+        ctMethod.setBody("{int s=Math.random()*10; return s+$1+$2;}");
         ctClass.addMethod(ctMethod);
         Object o=ctClass.toClass().newInstance();
         Method m=o.getClass().getDeclaredMethod("sum",int.class,int.class);
