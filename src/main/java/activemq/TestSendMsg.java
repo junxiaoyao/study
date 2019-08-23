@@ -15,7 +15,7 @@ import org.apache.activemq.command.ActiveMQTextMessage;
  * @create: 2019-08-07 10:37
  */
 public class TestSendMsg {
-
+    public int cs=5;
     public static void main(String[] args) {
         //        sendMsg("差三岁");
         inputMsg();

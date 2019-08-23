@@ -17,6 +17,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 public class ActiveMqUtil {
     public static final String SERVER_IP= "tcp://192.168.8.130:61616";
     public static final String TOPIC_NAME="topic_msg";
+    public static final String SUB_TOPIC_NAME="sub_topic_msg";
     public static final String QUEUE_NAME="queue_msg";
     public static Connection getConnection() {
         // ConnectionFactory ：连接工厂，JMS 用它创建连接
