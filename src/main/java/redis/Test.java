@@ -16,7 +16,7 @@ import java.util.Map;
  * @Description:
  */
 public class Test {
-    public final static String REDIS_SEVER="192.168.8.130";
+    public final static String REDIS_SEVER="192.168.231.66";
     public static void main(String[] args) {
 
         //testString();
