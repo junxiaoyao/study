@@ -10,7 +10,7 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class Receiver {
-    public static final String SERVER_IP= "tcp://192.168.8.130:61616";
+    public static final String SERVER_IP= "tcp://192.168.231.66:61616";
     public static void main(String[] args) {
         // ConnectionFactory ：连接工厂，JMS 用它创建连接
         ConnectionFactory connectionFactory;
@@ -31,7 +31,7 @@ public class Receiver {
             // 启动
             connection.start();
             // 获取操作连接
-            session = connection.createSession(Boolean.FALSE,
+            session = connection.createSession(Boolean.TRUE,
                     Session.AUTO_ACKNOWLEDGE);
             // 获取session注意参数值xingbo.xu-queue是一个服务器的queue，须在在ActiveMq的console配置
             destination = session.createQueue("mys-queue");
