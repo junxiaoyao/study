@@ -11,8 +11,6 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.RandomAccess;
 import java.util.Set;
-import org.apache.activemq.util.LRUSet;
-
 public class T1 {
 
   public static void main(String[] args) {

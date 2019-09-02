@@ -25,7 +25,7 @@ public class ActiveMqUtil {
         ConnectionFactory connectionFactory;
         // Connection ：JMS 客户端到JMS Provider 的连接
         Connection connection = null;
-        connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER, ActiveMQConnection.DEFAULT_PASSWORD, SERVER_NIO_IP);
+        connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER, ActiveMQConnection.DEFAULT_PASSWORD, SERVER_TCP_IP);
         try {
             connection=connectionFactory.createConnection();
             return connection;
