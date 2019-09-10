@@ -9,7 +9,7 @@ public class JiSuan {
 static int s;
   public static void main(String[] args) {
     System.out.println(s);
-    int jishu=500;
+    int jishu=1300;
     int fs=110;
     System.out.println("jl:"+jl(jishu,fs));
     System.out.println("kj:"+kj(jishu,fs));

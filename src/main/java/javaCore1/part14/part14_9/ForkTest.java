@@ -7,7 +7,7 @@ import java.util.function.DoublePredicate;
 public class ForkTest {
 
   public static void main(String[] args) {
-    final int size=1000;
+    final int size=10000;
     double[] numbers=new double[size];
     for (int i=0;i<size;i++)
       numbers[i]=Math.random();
