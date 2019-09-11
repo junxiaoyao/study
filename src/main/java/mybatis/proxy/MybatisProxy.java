@@ -21,11 +21,6 @@ import java.util.Map;
  * @Description:
  */
 public class MybatisProxy implements InvocationHandler {
-    private Object object;
-
-    public MybatisProxy(Object object) {
-        this.object = object;
-    }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -39,28 +34,27 @@ public class MybatisProxy implements InvocationHandler {
             return select(method, args);
         }
         if (AnnotationUtil.testMethodHasAnnotion(method, MyDelete.class)) {
-            delete(method, args);
+            return delete(method, args);
         }
         return null;
     }
 
     /**
-     * method.getParameters();获取参数
-     * args 参数值
+     * method.getParameters();获取参数 args 参数值
      */
-    //新增操作
+    // 新增操作
     private Object insert(Method method, Object[] args) throws Exception {
         MyInsertInto myInsertInto = AnnotationUtil.getMethodAnnotion(method, MyInsertInto.class);
         return insertAndUpdate(myInsertInto.value(), method, args);
     }
 
-    //更新操作
+    // 更新操作
     private Object update(Method method, Object[] args) throws Exception {
         MyUpdate myUpdate = AnnotationUtil.getMethodAnnotion(method, MyUpdate.class);
         return insertAndUpdate(myUpdate.value(), method, args);
     }
 
-    //新增查询操作
+    // 新增查询操作
     private Object insertAndUpdate(String sql, Method method, Object[] args) throws Exception {
         Map<String, Integer> mapSql = new HashMap<>();
         sql = sqlModify(sql, mapSql);
@@ -71,7 +65,7 @@ public class MybatisProxy implements InvocationHandler {
         return o;
     }
 
-    //查询操作
+    // 查询操作
     private Object select(Method method, Object[] args) throws Exception {
         MySelect mySelect = AnnotationUtil.getMethodAnnotion(method, MySelect.class);
         Map<String, Integer> mapSql = new HashMap<>();
@@ -84,28 +78,29 @@ public class MybatisProxy implements InvocationHandler {
         return SqlUtil.loadData(rs, method);
     }
 
-    //删除操作
-    private void delete(Method method, Object[] args) throws Exception {
+    // 删除操作
+    private int delete(Method method, Object[] args) throws Exception {
         MyDelete myDelete = AnnotationUtil.getMethodAnnotion(method, MyDelete.class);
         Map<String, Integer> mapSql = new HashMap<>();
         String sql = sqlModify(myDelete.value(), mapSql);
         Connection connection = getConnection();
         Map<Object, Integer> paramzz = SqlUtil.paramzz(method, args, mapSql);
-        SqlUtil.deleteObjectUtil(connection, sql, paramzz);
+        int rows = SqlUtil.deleteObjectUtil(connection, sql, paramzz);
         SqlUtil.printOutSqlAndParams(sql, paramzz);
+        return rows;
     }
 
-    //调用处理sql装载参数顺序
+    // 调用处理sql装载参数顺序
     private String sqlModify(String sql, Map<String, Integer> mapSql) {
         return SqlUtil.getParameter(sql, mapSql);
     }
 
-    //得到连接
+    // 得到连接
     private Connection getConnection() {
         return DataConnectionManage.getConnection();
     }
 
-    //释放连接
+    // 释放连接
     private void releaseConnection(Connection connection) {
         DataConnectionManage.releaseConnection(connection);
     }

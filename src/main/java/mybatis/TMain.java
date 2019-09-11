@@ -15,13 +15,16 @@ import java.util.List;
  * @Description:
  */
 public class TMain {
-    public static void main(String[] args)throws Exception {
-       // new BufferedReader(new FileInputStream(""));
+
+    public static void main(String[] args) throws Exception {
+        // new BufferedReader(new FileInputStream(""));
         NameDao dao = SqlSessionManage.getDao(NameDao.class);
         /*  Names name = dao.getById(7l);*/
-        List<Names> list = dao.getByName("nameTest");
+        List<Names> list = dao.getByName("瞎写，");
+        List<Names> allList = dao.getAll();
+        int deleteRow = dao.delete(list.get(0).getId());
         int row = dao.insert("瞎写，", "哪买的");
-     /*   dao.delete(7l);
+        /*   dao.delete(7l);
         Names name2 = dao.getById(1l);
         int row = dao.update("我改了7", "性别7", 7l);
         Names name32 = dao.getById(7l);*/

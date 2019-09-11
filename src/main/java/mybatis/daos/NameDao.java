@@ -26,8 +26,11 @@ public interface NameDao {
     @MySelect("select * from names WHERE name=#{name}")
     List<Names> getByName(@MyParam("name") String name);
 
+    @MySelect("select * from names ")
+    List<Names> getAll();
+
     @MyDelete("delete from names WHERE id=#{id}")
-    void delete(@MyParam("id") long id);
+    int delete(@MyParam("id") long id);
 
     @MyUpdate("update names set name =#{name},sex=#{sex} where id =#{id}")
     int update(@MyParam("name") String name, @MyParam("sex") String sex, @MyParam("id") long id);
