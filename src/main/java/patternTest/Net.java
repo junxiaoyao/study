@@ -19,7 +19,6 @@ public class Net {
         System.out.println("********************");
     //    strMatch(); //字符串匹配
     }
-
     private static void strMatch() {
         String phone = "13539770000";
         //检查phone是否是合格的手机号(标准:1开头，第二位为3,5,8，后9位为任意数字)

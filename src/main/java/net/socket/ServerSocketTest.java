@@ -25,9 +25,9 @@ public class ServerSocketTest {
         System.out.println("服务端监听8888端口，等待连接");
         Socket socket = serverSocket.accept();
         Scanner scanner = new Scanner(System.in);
-        Runnable readRunabl = SocketUtil.getReceiveRunnable(socket, "客户端");
+        Runnable readRunnable= SocketUtil.getReceiveRunnable(socket, "客户端");
         Runnable sendRunnable = SocketUtil.getSendMegRunnable(socket, scanner);
-        new Thread(readRunabl).start();
+        new Thread(readRunnable).start();
         new Thread(sendRunnable).start();
         while (Thread.activeCount() > 1) {
             Thread.sleep(1000);

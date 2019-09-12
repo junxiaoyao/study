@@ -4,7 +4,7 @@ import java.lang.ref.PhantomReference;
 import java.lang.ref.ReferenceQueue;
 
 /**
- * @description
+ * @description 虚引用
  * @author: jxy
  * @create: 2019-08-29 15:46
  */

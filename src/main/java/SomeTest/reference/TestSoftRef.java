@@ -3,7 +3,7 @@ package SomeTest.reference;
 import java.lang.ref.SoftReference;
 
 /**
- * @description
+ * @description 软引用
  * @author: jxy
  * @create: 2019-08-29 10:19
  */

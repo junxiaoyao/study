@@ -3,7 +3,7 @@ package SomeTest.reference;
 import java.lang.ref.WeakReference;
 
 /**
- * @description
+ * @description 弱引用
  * @author: jxy
  * @create: 2019-08-29 15:39
  */

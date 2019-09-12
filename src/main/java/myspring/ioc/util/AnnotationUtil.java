@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 /**
  * @Auther: jxy
  * @Date: 2019/3/19 9:12
- * @Description:注解工具类
+ * @Description:注解工具类 (存在英文单词拼写错误)
  */
 public class AnnotationUtil {
     //判断class是否含指定注解
