@@ -1,20 +1,33 @@
 package MyJava.hashMap;
 
-import java.security.Key;
-
 /**
  * @Auther: jxy
  * @Date: 2019/3/27 21:04
  * @Description:
  */
 public class MyHashMap<K, V> implements MyMap<K, V> {
+
+    // 默认容量16
     static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;
+
+    // 默认最大容量
     static final int MAXIMUM_CAPACITY = 1 << 30;
+
+    // 默认负载因子
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
+    // 存储的数据量
     private int size;
+
     transient int hashSeed = 6;
+
+    // Object数组
     MyEntry<K, V>[] table;
+
+    // 负载因子
     private float loadFactor;
+
+    // table数组长度
     private int initCapacity;
 
     public MyHashMap() {
@@ -50,12 +63,12 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     public V put(K key, V value) {
         if (table == null)
             table = new MyEntry[initCapacity];
-        //是否扩容
+        // 是否扩容
         expansionCapacity();
         if (key == null)
             return putForNull(key, value);
         int index = lookIndex(hash(key), table.length - 1);
-        //    System.out.println("key:" + key + " hash:" + hash(key) + " index:" + index);
+        // System.out.println("key:" + key + " hash:" + hash(key) + " index:" + index);
         if (table[index] != null) {
             MyEntry<K, V> myEntry = ergodicMyEntry(table[index], key);
             if (myEntry != null) {
@@ -75,11 +88,13 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         return null;
     }
 
-    //得到下标
+    // 得到下标
+    // 与数组长度减一进行位运算
     private int lookIndex(int hash, int length) {
         return hash & length;
     }
 
+    // 键为NULL放在数组下标为0下
     private V putForNull(K key, V value) {
         if (table[0] != null) {
             MyEntry<K, V> myEntry = ergodicMyEntry(table[0], key);
@@ -101,10 +116,10 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     }
 
     private MyEntry<K, V> addMyEntry(K key, V value) {
-        return new MyEntry<K, V>(key, value);
+        return new MyEntry(key, value);
     }
 
-    //遍历节点
+    // 遍历节点
     private MyEntry<K, V> ergodicMyEntry(MyEntry<K, V> myEntry, K key) {
         while (myEntry != null) {
             if (myEntry.key != null) {
@@ -120,7 +135,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         return null;
     }
 
-    //这是一个神奇的函数，用了很多的异或，移位等运算，
+    // 这是一个神奇的函数，用了很多的异或，移位等运算，
     // 对key的hashcode进一步进行计算以及二进制位的
     // 调整等来保证最终获取的存储位置尽量分布均匀
     final int hash(Object k) {
@@ -130,6 +145,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         return h ^ (h >>> 7) ^ (h >>> 4);
     }
 
+    // 测试是否需要扩容
     private void expansionCapacity() {
         int c = (int) (table.length * loadFactor);
         if ((size + 1) > c && (table.length * 2) < MAXIMUM_CAPACITY) {
@@ -143,7 +159,9 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         }
     }
 
+    // 数组扩容，通过hash计算地址可能有所变化，因此需要重新构建map，树形结构
     private void expansionCapacity(MyEntry<K, V> entry, MyEntry<K, V>[] newTable) {
+        // 循环遍历子节点，并重新计算位置
         while (entry != null) {
             int index = 0;
             if (entry.key != null) {
@@ -249,14 +267,18 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     private static int roundUpToPowerOf2(int number) {
         // assert number >= 0 : "number must be non-negative";
         return number >= MAXIMUM_CAPACITY ? MAXIMUM_CAPACITY
-                : (number > 1) ? Integer.highestOneBit((number - 1) << 1) : 1;
+            : (number > 1) ? Integer.highestOneBit((number - 1) << 1) : 1;
     }
 }
 
 class MyEntry<K, V> {
+
     K key;
+
     V value;
+
     MyEntry<K, V> next;
+
     int hash;
 
     public MyEntry(K key, V value) {
