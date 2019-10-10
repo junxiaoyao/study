@@ -23,6 +23,7 @@ public class TMain {
         List<Names> list = dao.getByName("瞎写，");
         List<Names> allList = dao.getAll();
         int deleteRow = dao.delete(list.get(0).getId());
+        list = dao.getByName("瞎写，");
         int row = dao.insert("瞎写，", "哪买的");
         /*   dao.delete(7l);
         Names name2 = dao.getById(1l);
