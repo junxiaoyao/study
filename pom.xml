@@ -16,7 +16,7 @@
         <hibernateVsersion>5.2.2.Final</hibernateVsersion>
         <spring-orm>1.2.6</spring-orm>
         <springSecurityVersion>4.2.1.RELEASE</springSecurityVersion>
-        <jacksonVsersion>2.9.8</jacksonVsersion>
+        <jacksonVsersion>2.10.0</jacksonVsersion>
     </properties>
     <build>
         <!--<resources>
