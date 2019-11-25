@@ -7,6 +7,7 @@ import sun.misc.Unsafe;
  * @description
  * @author: jxy
  * @create: 2019-11-25 14:47
+ * 注意：使用时Integer 不等于int,Integer 应该调用Object的交换方法，int 调用int
  */
 public class TestUnsafe {
 
