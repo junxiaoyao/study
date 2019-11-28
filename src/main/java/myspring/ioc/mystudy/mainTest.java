@@ -11,7 +11,7 @@ import myspring.ioc.xmlUtil.ClassXmlPathApplication;
 public class mainTest {
     public static void main(String[] args) throws Exception {
         ClassXmlPathApplication classXmlPathApplication = new ClassXmlPathApplication("myspring.xml");
-        User user =(User) classXmlPathApplication.getBean("user");
+        User user =classXmlPathApplication.getBean("user");
         user.say();
     }
 }
