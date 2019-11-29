@@ -19,22 +19,21 @@ import javaCore1.threePart.T;
  */
 public class TestDemo {
 
-    public static void main(String[] args)throws Exception {
-        TestDemo demo=new TestDemo();
-        InputStream inputStream=demo.getClass().getClassLoader().getResourceAsStream("从前有座灵剑山.txt");
-        String filepath=demo.getClass().getClassLoader().getResource("").getPath()+"从前有座灵剑山.txt";
-        System.out.println(readFileToString(filepath,Charset.forName("utf-8")));
+    public static void main(String[] args) throws Exception {
+        TestDemo demo = new TestDemo();
+        InputStream inputStream = demo.getClass().getClassLoader().getResourceAsStream("从前有座灵剑山.txt");
+        String filepath = demo.getClass().getClassLoader().getResource("").getPath() + "从前有座灵剑山1.txt";
+        System.out.println(readFileToString(filepath, Charset.forName("utf-8")));
     }
 
-    public static String readFileToString(String filepath , Charset charset) throws IOException {
-        try (FileInputStream in =new FileInputStream(filepath); FileChannel channel = in.getChannel()) {
+    public static String readFileToString(String filepath, Charset charset) throws IOException {
+        try (FileInputStream in = new FileInputStream(filepath); FileChannel channel = in.getChannel()) {
             long fileSize = channel.size();
             int bufferSize = 1024;
             if (fileSize < 1024) {
                 bufferSize = (int) fileSize;
             }
             StringBuilder builder = new StringBuilder((int) (fileSize / 2));
-
             ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
             CharBuffer charBuffer = CharBuffer.allocate(bufferSize / 2);
             CharsetDecoder decoder = charset.newDecoder();
