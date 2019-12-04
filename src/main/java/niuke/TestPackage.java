@@ -15,9 +15,9 @@ public class TestPackage {
 //        int space = 9;
         int[] nums = new int[5];
         int[] price = new int[] {9,2,6,3,5};
-        Arrays.sort(price);
+      //  Arrays.sort(price);
         int space = 200;
-        System.out.println("price排序数组");
+        System.out.println("数组");
         System.out.println(Arrays.toString(price));
         System.out.println("price结果数组");
         buyFor2(nums, price, space, 0);
@@ -35,10 +35,11 @@ public class TestPackage {
         if (start >price.length - 1) {
             return;
         }
-        if (space < price[0]) {
-            return;
-        }
+//        if (space < price[0]) {
+//            return;
+//        }
         if (space < price[start]) {
+            buyFor2(nums, price, space, ++start);
             return;
         }
         int[] nums2 = Arrays.copyOf(nums, nums.length);
