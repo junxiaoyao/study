@@ -10,6 +10,7 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class Receiver {
+    public static final String SERVER_IP= "tcp://192.168.231.66:61616";
     public static void main(String[] args) {
         // ConnectionFactory ：连接工厂，JMS 用它创建连接
         ConnectionFactory connectionFactory;
@@ -23,17 +24,17 @@ public class Receiver {
         MessageConsumer consumer;
         connectionFactory = new ActiveMQConnectionFactory(
                 ActiveMQConnection.DEFAULT_USER,
-                ActiveMQConnection.DEFAULT_PASSWORD, "tcp://118.24.188.79:61616");
+                ActiveMQConnection.DEFAULT_PASSWORD, SERVER_IP);
         try {
             // 构造从工厂得到连接对象
             connection = connectionFactory.createConnection();
             // 启动
             connection.start();
             // 获取操作连接
-            session = connection.createSession(Boolean.FALSE,
+            session = connection.createSession(Boolean.TRUE,
                     Session.AUTO_ACKNOWLEDGE);
             // 获取session注意参数值xingbo.xu-queue是一个服务器的queue，须在在ActiveMq的console配置
-            destination = session.createQueue("my-queue");
+            destination = session.createQueue("mys-queue");
             consumer = session.createConsumer(destination);
             while (true) {
                 // 设置接收者接收消息的时间，为了便于测试，这里谁定为100s

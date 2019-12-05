@@ -27,5 +27,6 @@ public class MyProxyByJavaSsist {
     public static void main(String[] args)throws Exception {
         User u=MyProxyByJavaSsist.getProxy(User.class);
         u.superS();
+        u.say();
     }
 }

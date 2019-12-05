@@ -6,7 +6,7 @@ public class MainTest {
 
     public static void main(String[] args) throws Exception {
         AnnotionPathContext annotionPathContext = new AnnotionPathContext("myspring.ioc.service");
-        UserService o=(UserService)annotionPathContext.getBean("userService");
+        UserService o=annotionPathContext.getBean("userService");
         o.say();
     }
 }

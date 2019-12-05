@@ -17,8 +17,11 @@ import java.util.Map;
  * @Description:dom4j读取spring.xml并解析bean
  */
 public class ClassXmlPathApplication {
+
     private String xmlPath;
+
     Map<String, String> idMap = new HashMap<>();
+
     public ClassXmlPathApplication(String xmlPath) throws DocumentException {
         this.xmlPath = xmlPath;
         readMain();
@@ -31,12 +34,13 @@ public class ClassXmlPathApplication {
         readElement(element);
     }
 
-    //读取文件转为输入流
+    // 读取文件转为输入流
     public InputStream getPath(String xmlPath) {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(xmlPath);
         return inputStream;
     }
-    //判断元素是否为bean，并将其加入到map
+
+    // 判断元素是否为bean，并将其加入到map
     public void getIdBeans(Element root) {
         String id = root.attributeValue("id");
         String classPath = root.attributeValue("class");
@@ -44,25 +48,26 @@ public class ClassXmlPathApplication {
             idMap.put(id, classPath);
         }
     }
-    //根据id获取bean
-    public Object getBean(String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+
+    // 根据id获取bean
+    public <T> T getBean(String id) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         String classPath = idMap.get(id);
         if (classPath == null) {
             return null;
         }
         Class classSe = Class.forName(classPath);
-        return classSe.newInstance();
+        return (T) classSe.newInstance();
     }
 
-    //递归遍历节点
+    // 递归遍历节点
     public void readElement(Element root) {
         getIdBeans(root);
-        //获取标签文本
+        // 获取标签文本
         String value = root.getTextTrim();
         if (!StringUtils.isEmpty(value)) {
             System.out.println("Text：" + value);
         }
-        //获取子元素
+        // 获取子元素
         List<Element> elements = root.elements();
         for (Element element : elements) {
             readElement(element);

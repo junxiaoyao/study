@@ -5,10 +5,11 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 //用过反射获取泛型信息
 public class ReflectionForGenerics {
-    public void test01(Map<String,Object> map,List<Object> users){
+    public void test01(Map<String,Object> map,List<Object> users, Queue queue){
         System.out.println("test01");
     }
 
@@ -19,9 +20,9 @@ public class ReflectionForGenerics {
 
     public static void main(String[] args) {
         try {
-            Class clazz = Class.forName("design.Refilact.ReflectionForGenerics");
+            Class clazz = ReflectionForGenerics.class;
             //获得指定方法参数泛型信息
-            Method method = clazz.getMethod("test01", Map.class,List.class);
+            Method method = clazz.getMethod("test01", Map.class,List.class,Queue.class);
             //获取泛型参数
             Type[] types = method.getGenericParameterTypes();
             for (Type type : types) {

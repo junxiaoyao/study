@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class SqlUtil {
 
-    //返回sql，并将参数位置装到map
+    // 返回sql，并将参数位置装到map
     public static String getParameter(String sql, Map<String, Integer> map) {
         int count = 1;
         String sqlC = sql;
@@ -32,7 +32,7 @@ public class SqlUtil {
         return sqlC;
     }
 
-    //替换参数为问号
+    // 替换参数为问号
     public static String sqlModify(String sql, String parameter) {
         String REGEX = "#\\{" + parameter + "}";
         final String REPLACE = "?";
@@ -42,7 +42,7 @@ public class SqlUtil {
         return sql;
     }
 
-    //参数序号工具
+    // 参数序号工具
     public static Map<Object, Integer> paramzz(Method method, Object[] args, Map<String, Integer> map) {
         Map<Object, Integer> parms = new HashMap<>();
         Parameter[] parameters = method.getParameters();
@@ -54,8 +54,9 @@ public class SqlUtil {
         return parms;
     }
 
-    //执行新增操作
-    public static int insertAndUpateUtil(Connection connection, String sql, Map<Object, Integer> parms) throws SQLException {
+    // 执行新增操作
+    public static int insertAndUpateUtil(Connection connection, String sql, Map<Object, Integer> parms)
+        throws SQLException {
         PreparedStatement pstmt = connection.prepareStatement(sql);
         for (Map.Entry<Object, Integer> entry : parms.entrySet()) {
             pstmt.setObject(entry.getValue(), entry.getKey());
@@ -65,8 +66,9 @@ public class SqlUtil {
         return rows;
     }
 
-    //执行查询操作
-    public static ResultSet getObjectUtil(Connection connection, String sql, Map<Object, Integer> parms) throws SQLException {
+    // 执行查询操作
+    public static ResultSet getObjectUtil(Connection connection, String sql, Map<Object, Integer> parms)
+        throws SQLException {
         PreparedStatement pstmt = connection.prepareStatement(sql);
         for (Map.Entry<Object, Integer> entry : parms.entrySet()) {
             pstmt.setObject(entry.getValue(), entry.getKey());
@@ -75,18 +77,20 @@ public class SqlUtil {
         return rs;
     }
 
-    //执行删除操作
-    public static void deleteObjectUtil(Connection connection, String sql, Map<Object, Integer> parms) throws SQLException {
+    // 执行删除操作
+    public static int deleteObjectUtil(Connection connection, String sql, Map<Object, Integer> parms)
+        throws SQLException {
         PreparedStatement pstmt = connection.prepareStatement(sql);
         for (Map.Entry<Object, Integer> entry : parms.entrySet()) {
             pstmt.setObject(entry.getValue(), entry.getKey());
         }
-        pstmt.execute();
-        //ResultSet rs = pstmt.executeQuery();
-
+        int rows = pstmt.executeUpdate();
+        // pstmt.execute();
+        // ResultSet rs = pstmt.executeQuery();
+        return rows;
     }
 
-    //获取结果集长度
+    // 获取结果集长度
     public static int getResultLength(ResultSet rs) throws SQLException {
         int count = 0;
         while (rs.next()) {
@@ -95,18 +99,18 @@ public class SqlUtil {
         return count;
     }
 
-    //装载查询数据
+    // 装载查询数据
     public static Object loadData(ResultSet rs, Method method) throws Exception {
         Class returnType = method.getReturnType();
-        //返回类型为list
-        if (returnType == List.class || returnType == ArrayList.class) {
+        // 返回类型为list
+        if (returnType.isAssignableFrom(List.class)) {
             return resultToList(rs, method);
         } else {
             return resultToObject(rs, returnType);
         }
     }
 
-    //给属性赋值
+    // 给属性赋值
     public static void fieldsSetValue(Object o, ResultSet rs) throws Exception {
         Field[] fields = o.getClass().getDeclaredFields();
         for (Field field : fields) {
@@ -116,7 +120,7 @@ public class SqlUtil {
         }
     }
 
-    //将结果装载为对象
+    // 将结果装载为对象
     public static Object resultToObject(ResultSet rs, Class returnType) throws Exception {
         int count = 0;
         Object o = null;
@@ -133,7 +137,7 @@ public class SqlUtil {
         return o;
     }
 
-    //将结果装载为List
+    // 将结果装载为List
     public static List resultToList(ResultSet rs, Method method) throws Exception {
         List list = null;
         int count = 0;
@@ -149,7 +153,7 @@ public class SqlUtil {
         return list;
     }
 
-    //返回泛型实例化对象
+    // 返回泛型实例化对象
     public static Object getTypeClass(Type returnType) throws Exception {
         if (returnType instanceof ParameterizedType) {
             Type[] typeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
@@ -160,7 +164,7 @@ public class SqlUtil {
         return null;
     }
 
-    //打印SQL
+    // 打印SQL
     public static void printOutSqlAndParams(String sql, Map<Object, Integer> parms) {
         System.out.println("########################################################################################");
         StringBuilder stringBuilder = new StringBuilder();

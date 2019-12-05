@@ -9,14 +9,15 @@ public class TestScheduleExecute {
 
   public static void main(String[] args) {
     ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
-    executorService.scheduleAtFixedRate(new TestScheduleExecuteRunable(), 5l, 5l, TimeUnit.SECONDS);
+    //runable，首次执行延迟时间，以后执行延迟时间，时间单位
+    executorService.scheduleAtFixedRate(new TestScheduleExecuteRunable(), 5l, 3l, TimeUnit.SECONDS);
   }
 }
 
 class TestScheduleExecuteRunable implements Runnable {
-
+  private volatile int size=1;
   @Override
   public void run() {
-    System.out.println("我被调用了：" + Calendar.getInstance().getTime().getTime());
+    System.out.println("我被调用了：" +size+++" 次，时间:"+ Calendar.getInstance().getTime());
   }
 }

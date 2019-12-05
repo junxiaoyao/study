@@ -1,5 +1,6 @@
 package thread;
 
+import java.io.InputStream;
 import java.util.concurrent.CountDownLatch;
 
 public class Test {
@@ -20,7 +21,6 @@ public class Test {
                 }
             }.start();
         }
-
         countDownLatch.await();
         System.out.println("main thread finished!!");
     }

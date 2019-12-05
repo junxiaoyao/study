@@ -15,11 +15,11 @@ public class TestActiveMq {
         mq.testMQProducerQueue();
     }
     public void testMQProducerQueue() throws Exception {
-        //1、创建工厂连接对象，需要制定ip和端口号
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://118.24.188.79:61616");
+        //1、创建工厂连接对象，需要指定Ip和端口号
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(Receiver.SERVER_IP);
 
-            connectionFactory.setUserName("admin");
-            connectionFactory.setPassword("admin");
+//            connectionFactory.setUserName("admin");
+//            connectionFactory.setPassword("admin");
         //2、使用连接工厂创建一个连接对象
         Connection connection = connectionFactory.createConnection();
         //3、开启连接

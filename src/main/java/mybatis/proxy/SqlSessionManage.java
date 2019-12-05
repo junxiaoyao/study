@@ -9,6 +9,6 @@ import java.lang.reflect.Proxy;
  */
 public class SqlSessionManage {
     public static <T> T getDao(Class dao) {
-        return (T) Proxy.newProxyInstance(dao.getClassLoader(), new Class[]{dao}, new MybatisProxy(dao));
+        return (T) Proxy.newProxyInstance(dao.getClassLoader(), new Class[]{dao}, new MybatisProxy());
     }
 }

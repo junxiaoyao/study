@@ -4,10 +4,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
-class MythreadCreat implements Runnable{
+class MyThreadCreat implements Runnable{
     private BlockingQueue<String> blockingQueue;
     private volatile boolean create=true;
-    public MythreadCreat(BlockingQueue blockingQueue) {
+    public MyThreadCreat(BlockingQueue blockingQueue) {
         this.blockingQueue = blockingQueue;
     }
 
@@ -68,13 +68,13 @@ class MythreadUse implements Runnable{
 public class TestOne {
     public static void main(String[] args) {
         BlockingQueue<String> blockingQueue=new LinkedBlockingDeque<>(5);
-        MythreadCreat mythreadCreat=new MythreadCreat(blockingQueue);
+        MyThreadCreat MyThreadCreat=new MyThreadCreat(blockingQueue);
         MythreadUse mythreadUse=new MythreadUse(blockingQueue);
-        new Thread(mythreadCreat).start();
+        new Thread(MyThreadCreat).start();
         new Thread(mythreadUse).start();
         try {
             Thread.sleep(20000);
-            mythreadCreat.stopCreate();
+            MyThreadCreat.stopCreate();
         }catch (Exception e){
             e.printStackTrace();
         }finally {

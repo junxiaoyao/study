@@ -26,7 +26,6 @@ class ThreadLocalValue {
 }
 
 class TestThreadLocalRunable implements Runnable {
-
   private ThreadLocal<ThreadLocalValue> threadLocal = new ThreadLocal(){
     @Override
     protected ThreadLocalValue initialValue() {
