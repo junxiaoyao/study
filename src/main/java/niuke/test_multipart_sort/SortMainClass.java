@@ -7,35 +7,22 @@ import java.util.TreeSet;
 /**
  * @Auther: jxy
  * @Date: 2019/12/5 19:45
- * @Description:
+ * @Description:主方法
  */
 public class SortMainClass {
 
     public static void main(String[] args) throws Exception {
         TreeSet<ModelClass> treeSet = new TreeSet<>();
-        BufferedReader r_1 = IOUtils.getFileReader(IOUtils.FILE_1);
         PrintWriter writer = IOUtils.getFilePrint(IOUtils.FILE_RE);
-        String line_1 = r_1.readLine();
-        if (line_1 != null && line_1.length() > 0) {
-            String[] line_1s = line_1.split(",");
-            ModelClass modelClass = new ModelClass(Integer.parseInt(line_1s[0]), line_1s[1], IOUtils.FILE_1, r_1);
-            treeSet.add(modelClass);
-        }
-
-        BufferedReader r_2 = IOUtils.getFileReader(IOUtils.FILE_2);
-        String line_2 = r_2.readLine();
-        if (line_2 != null && line_2.length() > 0) {
-            String[] line_2s = line_2.split(",");
-            ModelClass modelClass = new ModelClass(Integer.parseInt(line_2s[0]), line_2s[1], IOUtils.FILE_2, r_2);
-            treeSet.add(modelClass);
-        }
-
-        BufferedReader r_3 = IOUtils.getFileReader(IOUtils.FILE_3);
-        String line_3 = r_3.readLine();
-        if (line_3 != null && line_3.length() > 0) {
-            String[] line_3s = line_3.split(",");
-            ModelClass modelClass = new ModelClass(Integer.parseInt(line_3s[0]), line_3s[1], IOUtils.FILE_3, r_3);
-            treeSet.add(modelClass);
+        final String[] FILE_PATHS = new String[] {IOUtils.FILE_1, IOUtils.FILE_2, IOUtils.FILE_3};
+        for (int i = 0; i < FILE_PATHS.length; i++) {
+            BufferedReader reader = IOUtils.getFileReader(FILE_PATHS[i]);
+            String line = reader.readLine();
+            if (line != null && line.length() > 0) {
+                String[] lines = line.split(",");
+                ModelClass modelClass = new ModelClass(Integer.parseInt(lines[0]), lines[1], FILE_PATHS[i], reader);
+                treeSet.add(modelClass);
+            }
         }
         while (treeSet.size() > 0) {
             ModelClass modelClass = treeSet.first();
