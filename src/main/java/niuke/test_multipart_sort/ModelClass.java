@@ -1,5 +1,7 @@
 package niuke.test_multipart_sort;
 
+import java.io.BufferedReader;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,20 +13,21 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ModelClass implements Comparable<ModelClass> {
+
     private int num;
+
     private String data;
+
     private String fileName;
+
+    private BufferedReader reader;
 
     @Override
     public int compareTo(ModelClass o) {
-        int od = this.num - o.getNum();
-        if (od == 0) {
-            if (this.getFileName().equals(o.getFileName())) {
-                return 0;
-            } else {
-                return -1;
-            }
+        if (o.getReader()==this.reader) {
+            return 0;
         }
-        return this.num - o.getNum();
+        int od = this.num - o.getNum();
+        return od != 0 ? od : -1;
     }
 }

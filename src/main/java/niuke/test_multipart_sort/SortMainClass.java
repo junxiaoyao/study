@@ -2,9 +2,6 @@ package niuke.test_multipart_sort;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -21,7 +18,7 @@ public class SortMainClass {
         String line_1 = r_1.readLine();
         if (line_1 != null && line_1.length() > 0) {
             String[] line_1s = line_1.split(",");
-            ModelClass modelClass = new ModelClass(Integer.parseInt(line_1s[0]), line_1s[1], IOUtils.FILE_1);
+            ModelClass modelClass = new ModelClass(Integer.parseInt(line_1s[0]), line_1s[1], IOUtils.FILE_1, r_1);
             treeSet.add(modelClass);
         }
 
@@ -29,7 +26,7 @@ public class SortMainClass {
         String line_2 = r_2.readLine();
         if (line_2 != null && line_2.length() > 0) {
             String[] line_2s = line_2.split(",");
-            ModelClass modelClass = new ModelClass(Integer.parseInt(line_2s[0]), line_2s[1], IOUtils.FILE_2);
+            ModelClass modelClass = new ModelClass(Integer.parseInt(line_2s[0]), line_2s[1], IOUtils.FILE_2, r_2);
             treeSet.add(modelClass);
         }
 
@@ -37,37 +34,26 @@ public class SortMainClass {
         String line_3 = r_3.readLine();
         if (line_3 != null && line_3.length() > 0) {
             String[] line_3s = line_3.split(",");
-            ModelClass modelClass = new ModelClass(Integer.parseInt(line_3s[0]), line_3s[1], IOUtils.FILE_3);
+            ModelClass modelClass = new ModelClass(Integer.parseInt(line_3s[0]), line_3s[1], IOUtils.FILE_3, r_3);
             treeSet.add(modelClass);
         }
         while (treeSet.size() > 0) {
             ModelClass modelClass = treeSet.first();
             writer.println(modelClass.getNum() + "," + modelClass.getData());
             treeSet.remove(modelClass);
-            String fileName = modelClass.getFileName();
-            switch (fileName) {
-                case IOUtils.FILE_1:
-                    nextModel(r_1, modelClass, treeSet);
-                    break;
-                case IOUtils.FILE_2:
-                    nextModel(r_2, modelClass, treeSet);
-                    break;
-                case IOUtils.FILE_3:
-                    nextModel(r_3, modelClass, treeSet);
-                    break;
-            }
-
+            nextModel(modelClass, treeSet);
         }
         writer.close();
     }
 
-    public static void nextModel(BufferedReader reader, ModelClass modelClassSource, TreeSet<ModelClass> set) {
+    public static void nextModel(ModelClass modelClassSource, TreeSet<ModelClass> set) {
         try {
+            BufferedReader reader = modelClassSource.getReader();
             String line = reader.readLine();
             if (line != null && line.length() > 0) {
                 String[] lines = line.split(",");
                 ModelClass modelClass =
-                    new ModelClass(Integer.parseInt(lines[0]), lines[1], modelClassSource.getFileName());
+                    new ModelClass(Integer.parseInt(lines[0]), lines[1], modelClassSource.getFileName(), reader);
                 set.add(modelClass);
             }
         } catch (Exception e) {
