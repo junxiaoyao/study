@@ -1,4 +1,4 @@
-package test_ifeve.nio;
+package nio;
 
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
