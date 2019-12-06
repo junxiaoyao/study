@@ -14,8 +14,8 @@ public class IOUtils {
     public final static String FILE_3 = "F3.txt";
     public final static String FILE_RE = "RE.txt";
     public static void main(String[] args) throws Exception{
-        // writeFile(FILE_3);
-        testReadFile(FILE_1);
+         writeFile(FILE_3,5);
+       // testReadFile(FILE_1);
     }
 
     public static void testReadFile(String fileName)throws Exception {
@@ -25,13 +25,13 @@ public class IOUtils {
             System.out.println(line);
         }
     }
-
-    public static void writeFile(String fileName) {
+    //文件名+随机因子参数文件随机数据
+    public static void writeFile(String fileName,int randomInt) {
         PrintWriter pw = getFilePrint(fileName);
         int baseNum = 2;
         for (int i = 0; i < 5; i++) {
-            String str = baseNum + ",数据段模拟数据";
-            baseNum = baseNum + (int) (Math.random() * 5);
+            String str = baseNum + ",数据段模拟数据"+fileName;
+            baseNum = baseNum + (int) (Math.random() * randomInt);
             pw.println(str);
         }
 

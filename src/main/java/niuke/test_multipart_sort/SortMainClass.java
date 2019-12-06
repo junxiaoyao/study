@@ -13,8 +13,8 @@ import java.util.TreeSet;
  * @Description:
  */
 public class SortMainClass {
+
     public static void main(String[] args) throws Exception {
-        List<ModelClass> list = new ArrayList<>();
         TreeSet<ModelClass> treeSet = new TreeSet<>();
         BufferedReader r_1 = IOUtils.getFileReader(IOUtils.FILE_1);
         PrintWriter writer = IOUtils.getFilePrint(IOUtils.FILE_RE);
@@ -42,8 +42,7 @@ public class SortMainClass {
         }
         while (treeSet.size() > 0) {
             ModelClass modelClass = treeSet.first();
-            list.add(modelClass);
-            writer.println(modelClass.getNum()+","+modelClass.getData());
+            writer.println(modelClass.getNum() + "," + modelClass.getData());
             treeSet.remove(modelClass);
             String fileName = modelClass.getFileName();
             switch (fileName) {
@@ -60,23 +59,19 @@ public class SortMainClass {
 
         }
         writer.close();
-        //System.out.println();
     }
 
-    public static boolean nextModel(BufferedReader reader, ModelClass modelClassSource, TreeSet<ModelClass> set) {
+    public static void nextModel(BufferedReader reader, ModelClass modelClassSource, TreeSet<ModelClass> set) {
         try {
             String line = reader.readLine();
             if (line != null && line.length() > 0) {
                 String[] lines = line.split(",");
-                ModelClass modelClass = new ModelClass(Integer.parseInt(lines[0]), lines[1], modelClassSource.getFileName());
+                ModelClass modelClass =
+                    new ModelClass(Integer.parseInt(lines[0]), lines[1], modelClassSource.getFileName());
                 set.add(modelClass);
-                return true;
-            } else {
-                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
     }
 }
