@@ -24,9 +24,9 @@ public class SocketClientTest {
         //连接到本机的8888端口
         Socket s = new Socket("127.0.0.1", 8888);
         Scanner scanner = new Scanner(System.in);
-        Runnable readRunabl = SocketUtil.getReceiveRunnable(s, "服务端");
+        Runnable readRunnable = SocketUtil.getReceiveRunnable(s, "服务端");
         Runnable sendRunnable = SocketUtil.getSendMegRunnable(s, scanner);
-        new Thread(readRunabl).start();
+        new Thread(readRunnable).start();
         new Thread(sendRunnable).start();
     }
 }
