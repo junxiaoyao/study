@@ -39,8 +39,8 @@ public class Test {
     }
     public static void testString(){
         Jedis jedis =getConnect();
-        jedis.set("t1","t1string");
-        System.out.println(jedis.strlen("t1"));
+        jedis.set("T1","t1string");
+        System.out.println(jedis.strlen("T1"));
     }
     public static void testHash(){
        Map<String,String> map=new HashMap<>();

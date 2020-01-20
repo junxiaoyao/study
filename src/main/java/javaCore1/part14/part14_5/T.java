@@ -30,7 +30,7 @@ class RunAbleSetSize implements Runnable {
   public void run() {
     while (true) {
       int size = (int) (Math.random() * 100);
-      // System.out.println("设置值："+size);
+     //  System.out.println("设置值："+size);
       t2.setSize(size);
     }
   }

@@ -9,6 +9,6 @@ public class T extends Sub {
     super.say();
   }
   //  protected int s(){
-//    super.t1(5)
+//    super.T1(5)
 //  }
 }
