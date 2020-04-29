@@ -10,7 +10,7 @@ public class TestAnotationClass {
         System.out.println("不含注解");
     }
 
-    @MyAnnotion(name = "瞎搞")
+    @MyAnnotation(name = "瞎搞")
     public void anSay() {
         System.out.println("含注解");
     }
