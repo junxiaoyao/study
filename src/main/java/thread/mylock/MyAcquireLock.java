@@ -4,7 +4,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
-import org.jetbrains.annotations.NotNull;
+
+import com.sun.istack.NotNull;
+
 
 /**
  * @description 一个简单的独占锁
