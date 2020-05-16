@@ -11,6 +11,6 @@ public class MyThreadFactory implements ThreadFactory {
 
     @Override
     public Thread newThread(Runnable runnable) {
-        return new Thread(runnable, poolName);
+        return new MyAppThread(runnable, poolName);
     }
 }

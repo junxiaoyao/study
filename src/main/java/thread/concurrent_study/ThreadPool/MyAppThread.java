@@ -9,9 +9,10 @@ import java.util.logging.Logger;
 @Data
 public class MyAppThread extends Thread {
     public static final String DEFAULT_NAME = "MyAppThread";
-    private static volatile boolean debugLifecycle = false;
+    private static volatile boolean debugLifecycle = true;
     private static final AtomicInteger created = new AtomicInteger();
     private static final AtomicInteger alive = new AtomicInteger();
+    private final AtomicInteger executeTaskNums=new AtomicInteger();
     private static final Logger log = Logger.getAnonymousLogger();
 
     public MyAppThread(Runnable runnable) {
@@ -20,25 +21,29 @@ public class MyAppThread extends Thread {
 
     public MyAppThread(Runnable runnable, String name) {
         super(runnable, name + "-" + created.incrementAndGet());
-        setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                log.log(Level.SEVERE, "Uncaught in thread" + t.getName(), e);
-            }
-        });
     }
 
     @Override
     public void run() {
         //复制debug标志，确保一致的值
         boolean debug = debugLifecycle;
-        if (debug) log.log(Level.FINE, "Created" + getName());
+        if (debug) log.log(Level.INFO, "Created" + getName());
         try {
             alive.incrementAndGet();
+            executeTaskNums.incrementAndGet();
             super.run();
         } finally {
             alive.decrementAndGet();
-            if (debug) log.log(Level.FINE, "Exiting" + getName());
+            if (debug){
+                log.log(Level.INFO, "Exiting" + getName());
+            }
+            log.log(Level.INFO,getName()+"执行任务数量："+executeTaskNums.get());
         }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        log.log(Level.INFO,getName()+"最终执行任务数量："+executeTaskNums.get());
+        super.finalize();
     }
 }
