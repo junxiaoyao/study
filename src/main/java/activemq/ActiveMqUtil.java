@@ -16,7 +16,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  */
 public class ActiveMqUtil {
     public static final String SERVER_NIO_IP= "nio://192.168.231.66:61618";
-    public static final String SERVER_TCP_IP= "tcp://192.168.231.66:61616";
+    public static final String SERVER_TCP_IP= "tcp://127.0.0.1:61616";
     public static final String TOPIC_NAME="topic_msg";
     public static final String SUB_TOPIC_NAME="sub_topic_msg";
     public static final String QUEUE_NAME="queue_msg";
