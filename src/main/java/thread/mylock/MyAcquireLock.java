@@ -5,8 +5,6 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-import com.sun.istack.NotNull;
-
 
 /**
  * @description 一个简单的独占锁
@@ -20,11 +18,20 @@ public class MyAcquireLock implements Lock, java.io.Serializable {
         // 尝试获取锁
         @Override
         protected boolean tryAcquire(int acquires) {
-            // 如果当前状态唯一，说明该锁已经被获取
-            assert acquires == 1; // Otherwise unused
-            // Cas修改状态为1，即成功获取锁
-            if (compareAndSetState(0, 1)) {
-                setExclusiveOwnerThread(Thread.currentThread());
+            final Thread current = Thread.currentThread();
+            int c = getState();
+            if (c == 0) {
+                if (compareAndSetState(0, acquires)) {
+                    setExclusiveOwnerThread(current);
+                    return true;
+                }
+            }
+            //当前线程已经获取锁，重入
+            else if (current == getExclusiveOwnerThread()) {
+                int nextc = c + acquires;
+                if (nextc < 0) // overflow
+                    throw new Error("Maximum lock count exceeded");
+                setState(nextc);
                 return true;
             }
             return false;
@@ -65,7 +72,7 @@ public class MyAcquireLock implements Lock, java.io.Serializable {
     }
 
     @Override
-    public boolean tryLock(long time, @NotNull TimeUnit unit) throws InterruptedException {
+    public boolean tryLock(long time,  TimeUnit unit) throws InterruptedException {
         return false;
     }
 
@@ -74,7 +81,6 @@ public class MyAcquireLock implements Lock, java.io.Serializable {
         sync.release(1);
     }
 
-    @NotNull
     @Override
     public Condition newCondition() {
         return sync.newCondition();

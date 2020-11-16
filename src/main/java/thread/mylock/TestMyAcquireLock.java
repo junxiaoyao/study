@@ -1,5 +1,7 @@
 package thread.mylock;
 
+import java.util.concurrent.locks.Lock;
+
 /**
  * @description
  * @author: jxy
@@ -25,9 +27,9 @@ public class TestMyAcquireLock {
 
         IntSaveClass intSaveClass;
 
-        MyAcquireLock lock;
+        Lock lock;
 
-        public RunnableNum(IntSaveClass intSaveClass, MyAcquireLock lock) {
+        public RunnableNum(IntSaveClass intSaveClass, Lock lock) {
             this.intSaveClass = intSaveClass;
             this.lock = lock;
         }
