@@ -11,27 +11,20 @@ import java.util.concurrent.locks.Lock;
  * @author: jxy
  * @create: 2020-04-22 15:37
  */
-public class MyAcquireLock implements Lock, java.io.Serializable {
-  private Sync sync=new Sync();
+public class MySimpleLock implements Lock, java.io.Serializable {
+
+    private Sync sync = new Sync();
+
     private static class Sync extends AbstractQueuedSynchronizer {
 
         // 尝试获取锁
         @Override
         protected boolean tryAcquire(int acquires) {
-            final Thread current = Thread.currentThread();
-            int c = getState();
-            if (c == 0) {
-                if (compareAndSetState(0, acquires)) {
-                    setExclusiveOwnerThread(current);
-                    return true;
-                }
-            }
-            //当前线程已经获取锁，重入
-            else if (current == getExclusiveOwnerThread()) {
-                int nextc = c + acquires;
-                if (nextc < 0) // overflow
-                    throw new Error("Maximum lock count exceeded");
-                setState(nextc);
+            assert acquires == 1; // Otherwise unused
+            //获取锁标记次数
+            int count=getState();
+            if (compareAndSetState(0, 1)) {
+                setExclusiveOwnerThread(Thread.currentThread());
                 return true;
             }
             return false;
@@ -41,25 +34,28 @@ public class MyAcquireLock implements Lock, java.io.Serializable {
         @Override
         protected boolean tryRelease(int releases) {
             assert releases == 1; // Otherwise unused
-            if (getState() == 0)
+            if (getState() == 0) {
                 throw new IllegalMonitorStateException();
+            }
             setExclusiveOwnerThread(null);
             setState(0);
             return true;
         }
+
         //返回是否独占
         @Override
         protected boolean isHeldExclusively() {
-            return getState()==1;
+            return getState() == 1;
         }
-        Condition newCondition(){
-          return new ConditionObject();
+
+        Condition newCondition() {
+            return new ConditionObject();
         }
     }
 
     @Override
     public void lock() {
-      sync.acquire(1);
+        sync.acquire(1);
     }
 
     @Override
@@ -72,7 +68,7 @@ public class MyAcquireLock implements Lock, java.io.Serializable {
     }
 
     @Override
-    public boolean tryLock(long time,  TimeUnit unit) throws InterruptedException {
+    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
         return false;
     }
 

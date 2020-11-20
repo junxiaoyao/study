@@ -10,13 +10,13 @@ import java.util.concurrent.locks.Lock;
 public class TestMyAcquireLock {
 
     public static void main(String[] args) {
-        MyAcquireLock lock = new MyAcquireLock();
+        Lock lock = new MyReentrantLock();
         Integer integer = 0;
-        IntSaveClass intSaveClass = new IntSaveClass();
-        new Thread(new RunnableNum(intSaveClass,lock)).start();
-        new Thread(new RunnableNum(intSaveClass,lock)).start();
-        new Thread(new RunnableNum(intSaveClass,lock)).start();
-        new Thread(new RunnableNum(intSaveClass,lock)).start();
+        IntSaveClass intSaveClass = new IntSaveClass(lock);
+        new Thread(new RunnableNum(intSaveClass, lock)).start();
+        new Thread(new RunnableNum(intSaveClass, lock)).start();
+        new Thread(new RunnableNum(intSaveClass, lock)).start();
+        new Thread(new RunnableNum(intSaveClass, lock)).start();
         while (Thread.activeCount() > 1) {
             Thread.yield();
         }
@@ -36,14 +36,17 @@ public class TestMyAcquireLock {
 
         @Override
         public void run() {
-            try {
-                lock.lock();
-                for (int i = 0; i < 10000; i++) {
-                    intSaveClass.add();
-                }
-            } finally {
-                lock.unlock();
+            for (int i = 0; i < 10000; i++) {
+                intSaveClass.add();
             }
+//            try {
+//                lock.lock();
+//                for (int i = 0; i < 10000; i++) {
+//                    intSaveClass.add();
+//                }
+//            } finally {
+//                lock.unlock();
+//            }
 
         }
     }
@@ -51,9 +54,28 @@ public class TestMyAcquireLock {
     private static class IntSaveClass {
 
         int i = 0;
+        Lock lock;
+
+        public IntSaveClass(Lock lock) {
+            this.lock = lock;
+        }
 
         public void add() {
-            i++;
+            try {
+                lock.lock();
+                this.dep();
+            } finally {
+                lock.unlock();
+            }
+        }
+
+        public void dep() {
+            try {
+                lock.lock();
+                i++;
+            } finally {
+                lock.unlock();
+            }
         }
 
         public int getI() {
