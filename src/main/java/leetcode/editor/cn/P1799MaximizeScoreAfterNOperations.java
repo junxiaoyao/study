@@ -63,9 +63,11 @@ public class P1799MaximizeScoreAfterNOperations {
     public static void main(String[] args) {
         Solution solution = new P1799MaximizeScoreAfterNOperations().new Solution();
         // TO TEST
-        int[] nums = {415, 230, 471, 705, 902, 87};
-        int[] nums2 = {1,2,3,4,5,6};
-        System.out.println(solution.maxScore(nums2));
+        int[] nums = {697035, 181412, 384958, 575458};
+        int[] nums2 = {415, 230, 471, 705, 902, 87};
+        int[] nums3 = {3, 4, 6, 8};
+        solution.maxScoreV2(nums2);
+        // System.out.println(solution.maxScore(nums2));
         // System.out.println(solution.maxScore(nums));
     }
 
@@ -143,6 +145,79 @@ public class P1799MaximizeScoreAfterNOperations {
                 return one;
             }
             return gcd(two, one % two);
+        }
+
+
+        public int maxScoreV2(int[] nums) {
+            int sum = 0;
+            int[][] gcds = new int[nums.length][nums.length];
+            for (int i = 0; i < nums.length; i++) {
+                for (int j = 0; j < nums.length; j++) {
+                    if (i != j) {
+                        int temp = gcd(nums[i], nums[j]);
+                        gcds[i][j] = temp;
+                    } else {
+                        gcds[i][j] = -1;
+                    }
+                }
+            }
+            int length = nums.length;
+            while (length > 0) {
+                int selectMax = selectMax(gcds);
+                length = length / 2;
+                sum += length * selectMax;
+            }
+//            int selectMax1 = selectMax(gcds);
+//            int selectMax2 = selectMax(gcds);
+            return sum;
+        }
+
+        public int selectMax(int[][] nums) {
+            int max = nums[1][0];
+            int maxRow = 1;
+            int maxCol = 0;
+            for (int i = 1; i < nums.length; i++) {
+                for (int j = 0; j < i; j++) {
+                    if (nums[i][j] > max) {
+                        if (test(nums, i, j)) {
+                            max = nums[i][j];
+                            maxRow = i;
+                            maxCol = j;
+                        }
+                    }
+                }
+            }
+            nums[maxRow][maxCol] = 0;
+            test2(nums,maxRow,maxCol);
+            return max;
+        }
+
+        //将已选择的行列置位0
+        public void test2(int[][] nums, int rowIndex, int colIndex) {
+            for (int i = 1; i < nums.length; i++) {
+                nums[i][colIndex] = 0;
+            }
+            //判断行是有被使用
+//            for (int i = 0; i < nums.length; i++) {
+//                nums[rowIndex][i] = 0;
+//            }
+        }
+
+        //判断选择行列是否有已被使用的数据
+        public boolean test(int[][] nums, int rowIndex, int colIndex) {
+            //判断列是有被使用
+            for (int i = 1; i < nums.length; i++) {
+                if (nums[i][colIndex] == 0) {
+                    return false;
+                }
+            }
+//            //判断行是有被使用
+            for (int i = 0; i < rowIndex; i++) {
+                if (nums[rowIndex][i] == 0) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)
