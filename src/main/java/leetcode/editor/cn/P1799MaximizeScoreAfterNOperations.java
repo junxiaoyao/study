@@ -63,16 +63,9 @@ public class P1799MaximizeScoreAfterNOperations {
     public static void main(String[] args) {
         Solution solution = new P1799MaximizeScoreAfterNOperations().new Solution();
         // TO TEST
-        int[] nums = {697035,181412,384958,575458};
-//        int[] numsLeft = Arrays.copyOfRange(nums, 0, 0);
-//        int[] numsRight = Arrays.copyOfRange(nums, 1, nums.length - 1);
-//        int[] target = new int[numsLeft.length + numsRight.length];
-//        System.arraycopy(numsLeft, 0, target, 0, numsLeft.length);
-//        System.arraycopy(numsRight, 0, target, numsLeft.length, numsRight.length);
-//        int[] ints = solution.searchMax(nums, nums.length - 2, 1, nums.length - 2);
-//        int[] copyOfRange = Arrays.copyOfRange(nums, 1, nums.length - 1);
-        //      int[] ints = solution.searchMax(nums, nums.length - 2, 1, nums.length - 2);
-        System.out.println(solution.maxScore(nums));
+        int[] nums = {415, 230, 471, 705, 902, 87};
+        int[] nums2 = {1,2,3,4,5,6};
+        System.out.println(solution.maxScore(nums2));
         // System.out.println(solution.maxScore(nums));
     }
 
@@ -91,43 +84,57 @@ public class P1799MaximizeScoreAfterNOperations {
             }
             List<Integer> integerList = new ArrayList<>();
             while (nums.length > 0) {
-                int[] ints = searchMax(nums, nums.length - 2, 1, nums.length - 2);
+
+                int[] ints = searchMax(nums, nums.length - 2, 1, nums.length - 2, nums.length - 1);
+                //用于排除下标不是最后一个元素参与的最大约数操作
+                for (int i = nums.length - 2; i > 0; i--) {
+                    int[] intTemp = searchMax(nums, i - 1, 1, i - 1, i);
+                    int intTempGcd = intTemp[0];
+                    if (intTempGcd >= ints[0]) {
+                        ints = intTemp;
+                    }
+                }
                 int gcd = ints[0];
                 integerList.add(gcd);
                 //移位操作
-                int selectIndex = ints[1];
-                int[] numsLeft = Arrays.copyOfRange(nums, 0, selectIndex);
-                int[] numsRight = Arrays.copyOfRange(nums, selectIndex + 1, nums.length - 1);
-                int[] target = new int[numsLeft.length + numsRight.length];
+                int firstIndex = ints[1];
+                int secondIndex = ints[2];
+                int[] numsLeft = Arrays.copyOfRange(nums, 0, firstIndex);
+                int[] numsCenter = Arrays.copyOfRange(nums, firstIndex + 1, secondIndex);
+                int[] numsRight = Arrays.copyOfRange(nums, secondIndex + 1, nums.length);
+                int[] target = new int[numsLeft.length + numsCenter.length + numsRight.length];
                 System.arraycopy(numsLeft, 0, target, 0, numsLeft.length);
-                System.arraycopy(numsRight, 0, target, numsLeft.length, numsRight.length);
+                System.arraycopy(numsCenter, 0, target, numsLeft.length, numsCenter.length);
+                System.arraycopy(numsRight, 0, target, numsLeft.length + numsCenter.length,
+                        numsRight.length);
                 nums = target;
             }
             integerList.sort((o1, o2) -> o2 - o1);
             for (int i = 0; i < integerList.size(); i++) {
-                sum += (integerList.size()-i) * integerList.get(i);
+                sum += (integerList.size() - i) * integerList.get(i);
             }
             return sum;
         }
 
         //倒着搜索,找到比当前gcd小的直接退出，说明倒排已寻找至最大数字，
+        //改进版。搜索下标为target的最大公约数组
         //返回gcd和当前下标方便移除
-        public int[] searchMax(int[] nums, int indexNow, int nowGcd, int selectIndex) {
+        public int[] searchMax(int[] nums, int indexNow, int nowGcd, int selectIndex, int target) {
             //如果搜到到下标0，则直接返回当前组合的最大公约数
             if (indexNow == 0) {
                 //如果此时相等，将当前选择
-                int tempGcd = gcd(nums[nums.length - 1], nums[0]);
+                int tempGcd = gcd(nums[target], nums[0]);
                 if (tempGcd >= nowGcd) {
-                    return new int[]{tempGcd, 0};
+                    return new int[]{tempGcd, 0, target};
                 }
-                return new int[]{nowGcd, selectIndex};
+                return new int[]{nowGcd, selectIndex, target};
             }
-            int tempGcd = gcd(nums[nums.length - 1], nums[indexNow]);
+            int tempGcd = gcd(nums[target], nums[indexNow]);
             //如果当前gcd大选种当前
             if (tempGcd >= nowGcd) {
-                return searchMax(nums, indexNow - 1, tempGcd, indexNow);
+                return searchMax(nums, indexNow - 1, tempGcd, indexNow, target);
             } else {
-                return searchMax(nums, indexNow - 1, nowGcd, selectIndex);
+                return searchMax(nums, indexNow - 1, nowGcd, selectIndex, target);
             }
         }
 
