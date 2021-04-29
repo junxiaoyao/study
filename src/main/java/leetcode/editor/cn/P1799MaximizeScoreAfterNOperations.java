@@ -206,7 +206,7 @@ public class P1799MaximizeScoreAfterNOperations {
         //判断选择行列是否有已被使用的数据
         public boolean test(int[][] nums, int rowIndex, int colIndex) {
             //判断列是有被使用
-            for (int i = 1; i < nums.length; i++) {
+           for (int i = 1; i < nums.length; i++) {
                 if (nums[i][colIndex] == 0) {
                     return false;
                 }
